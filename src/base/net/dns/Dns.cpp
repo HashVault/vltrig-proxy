@@ -1,6 +1,7 @@
 /* XMRig
  * Copyright (c) 2018-2025 SChernykh   <https://github.com/SChernykh>
  * Copyright (c) 2016-2025 XMRig       <https://github.com/xmrig>, <support@xmrig.com>
+ * Copyright (c) 2026      HashVault   <https://github.com/HashVault>, <root@hashvault.pro>
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -21,12 +22,18 @@
 #include "base/net/dns/DnsRequest.h"
 #include "base/net/dns/DnsUvBackend.h"
 
+#ifdef XMRIG_FEATURE_TLS
+#   include "base/net/dns/DnsPoolNsBackend.h"
+#   include "base/net/dns/DomainUtils.h"
+#endif
+
 
 namespace xmrig {
 
 
 DnsConfig Dns::m_config;
 std::map<String, std::shared_ptr<IDnsBackend>> Dns::m_backends;
+int Dns::m_resolving = 0;
 
 
 } // namespace xmrig
@@ -37,7 +44,15 @@ std::shared_ptr<xmrig::DnsRequest> xmrig::Dns::resolve(const String &host, IDnsL
     auto req = std::make_shared<DnsRequest>(listener);
 
     if (m_backends.find(host) == m_backends.end()) {
-        m_backends.insert({ host, std::make_shared<DnsUvBackend>() });
+#       ifdef XMRIG_FEATURE_TLS
+        if (m_config.poolNs() && !DomainUtils::isIpAddress(host) && !m_config.isDoHServer(host)) {
+            m_backends.insert({ host, std::make_shared<DnsPoolNsBackend>() });
+        }
+        else
+#       endif
+        {
+            m_backends.insert({ host, std::make_shared<DnsUvBackend>() });
+        }
     }
 
     m_backends.at(host)->resolve(host, req, m_config);

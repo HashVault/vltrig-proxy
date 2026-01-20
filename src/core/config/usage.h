@@ -60,6 +60,14 @@ static inline const std::string &usage()
     u += "  -6, --ipv6                    resolve names to IPv6 addresses\n";
     u += "      --dns-ttl=N               N seconds (default: 30) TTL for internal DNS cache\n";
 
+#   ifdef XMRIG_FEATURE_HTTP2
+    u += "      --dns-pool-ns             enable DNS-over-HTTPS with pool NS lookup (default: enabled)\n";
+    u += "      --no-dns-pool-ns          disable DNS-over-HTTPS and pool NS lookup\n";
+    u += "      --dns-pool-ns-timeout=N   timeout in ms for pool NS resolution (default: 1000)\n";
+    u += "      --dns-doh-primary=HOST    primary DoH server hostname (default: dns.google)\n";
+    u += "      --dns-doh-fallback=HOST   fallback DoH server hostname (default: dns.nextdns.io)\n";
+#   endif
+
 #   ifdef XMRIG_FEATURE_HTTP
     u += "      --daemon                  use daemon RPC instead of pool for solo mining\n";
     u += "      --daemon-zmq-port         daemon's zmq-pub port number (only use it if daemon has it enabled)\n";

@@ -28,6 +28,10 @@
 #   include "base/net/https/HttpsClient.h"
 #endif
 
+#ifdef XMRIG_FEATURE_HTTP2
+#   include "base/net/http2/Http2Client.h"
+#endif
+
 
 xmrig::FetchRequest::FetchRequest(llhttp_method method, const String &host, uint16_t port, const String &path, bool tls, bool quiet, const char *data, size_t size, const char *contentType) :
     quiet(quiet),
@@ -108,7 +112,15 @@ void xmrig::fetch(const char *tag, FetchRequest &&req, const std::weak_ptr<IHttp
     HttpClient *client = nullptr;
 #   ifdef XMRIG_FEATURE_TLS
     if (req.tls) {
-        client = new HttpsClient(tag, std::move(req), listener);
+#       ifdef XMRIG_FEATURE_HTTP2
+        if (req.http2 || req.path == "/dns-query") {
+            client = new Http2Client(tag, std::move(req), listener);
+        }
+        else
+#       endif
+        {
+            client = new HttpsClient(tag, std::move(req), listener);
+        }
     }
     else
 #   endif

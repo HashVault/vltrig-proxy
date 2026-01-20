@@ -49,6 +49,7 @@ public:
 
     inline bool hasBody() const { return method != HTTP_GET && method != HTTP_HEAD && !body.empty(); }
 
+    bool http2              = false;
     bool quiet              = false;
     bool tls                = false;
     llhttp_method method    = HTTP_GET;

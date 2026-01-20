@@ -49,20 +49,21 @@ public:
 protected:
     void handshake() override;
     void read(const char *data, size_t size) override;
-
-private:
-    void write(std::string &&data, bool close) override;
-
     bool verify(X509 *cert);
-    bool verifyFingerprint(X509 *cert);
     void flush(bool close);
 
     BIO *m_read                         = nullptr;
     BIO *m_write                        = nullptr;
     bool m_ready                        = false;
-    char m_fingerprint[32 * 2 + 8]{};
     SSL *m_ssl                          = nullptr;
     SSL_CTX *m_ctx                      = nullptr;
+
+private:
+    void write(std::string &&data, bool close) override;
+
+    bool verifyFingerprint(X509 *cert);
+
+    char m_fingerprint[32 * 2 + 8]{};
 };
 
 

@@ -7,6 +7,7 @@
  * Copyright 2017-2018 XMR-Stak    <https://github.com/fireice-uk>, <https://github.com/psychocrypt>
  * Copyright 2018-2025 SChernykh   <https://github.com/SChernykh>
  * Copyright 2016-2025 XMRig       <https://github.com/xmrig>, <support@xmrig.com>
+ * Copyright 2026      HashVault   <https://github.com/HashVault>, <root@hashvault.pro>
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -91,6 +92,11 @@ static struct option const options[] = {
     { "tls-ciphers",       1, nullptr, IConfig::TlsCiphersKey     },
     { "tls-ciphersuites",  1, nullptr, IConfig::TlsCipherSuitesKey},
     { "tls-gen",           1, nullptr, IConfig::TlsGenKey         },
+    { "dns-pool-ns",       0, nullptr, IConfig::DnsPoolNsKey      },
+    { "no-dns-pool-ns",    0, nullptr, IConfig::DnsNoPoolNsKey    },
+    { "dns-pool-ns-timeout", 1, nullptr, IConfig::DnsPoolNsTimeoutKey },
+    { "dns-doh-primary",   1, nullptr, IConfig::DnsDoHPrimaryKey  },
+    { "dns-doh-fallback",  1, nullptr, IConfig::DnsDoHFallbackKey },
     { "no-algo-ext",       0, nullptr, IConfig::AlgoExtKey        },
     { "access-password",   1, nullptr, IConfig::ProxyPasswordKey  },
     { "login-file",        1, nullptr, IConfig::LoginFileKey      },

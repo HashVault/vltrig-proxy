@@ -72,9 +72,9 @@ public:
 
 protected:
     uv_tcp_t *m_tcp;
+    inline IHttpListener *httpListener() const { return m_listener.expired() ? nullptr : m_listener.lock().get(); }
 
 private:
-    inline IHttpListener *httpListener() const { return m_listener.expired() ? nullptr : m_listener.lock().get(); }
 
     static int onHeaderField(llhttp_t *parser, const char *at, size_t length);
     static int onHeaderValue(llhttp_t *parser, const char *at, size_t length);

@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
-project(xmrig-proxy)
+project(vltrig-proxy)
 
 
 option(WITH_GOOGLE_BREAKPAD "Use Google Breakpad"     OFF)
 option(WITH_DEBUG_LOG       "Enable debug log output" OFF)
 option(WITH_HTTP            "HTTP protocol support (client/server)" ON)
+option(WITH_HTTP2           "Enable HTTP/2 support for DoH" ON)
 option(WITH_TLS             "Enable OpenSSL support"  ON)
 option(WITH_ENV_VARS        "Enable environment variables support in config file" ON)
 
@@ -149,6 +150,7 @@ add_definitions(/DUNICODE)
 add_definitions(/D__STDC_FORMAT_MACROS)
 add_definitions(/DAPP_DEVEL)
 add_definitions(/DXMRIG_NO_ASM)
+add_definitions(/DVLTRIG_DEFAULT_POOL)
 
 add_definitions(/DXMRIG_ALGO_RANDOMX)
 add_definitions(/DXMRIG_ALGO_CN_LITE)
@@ -167,6 +169,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
 find_package(UV REQUIRED)
 
 include(cmake/flags.cmake)
+include(cmake/NGHTTP2.cmake)
 include(cmake/OpenSSL.cmake)
 
 if (WITH_GOOGLE_BREAKPAD)
@@ -194,7 +197,7 @@ include_directories(src/3rdparty)
 include_directories(${UV_INCLUDE_DIR})
 
 add_executable(${CMAKE_PROJECT_NAME} ${HEADERS} ${SOURCES} ${SOURCES_OS} ${SOURCES_SYSLOG} ${HTTP_SOURCES} ${TLS_SOURCES})
-target_link_libraries(${CMAKE_PROJECT_NAME} ${OPENSSL_LIBRARIES} ${UV_LIBRARIES} ${EXTRA_LIBS} ${GOOGLE_BREAKPAD_LIBS})
+target_link_libraries(${CMAKE_PROJECT_NAME} ${OPENSSL_LIBRARIES} ${UV_LIBRARIES} ${EXTRA_LIBS} ${GOOGLE_BREAKPAD_LIBS} ${NGHTTP2_LIBRARIES})
 
 if (CMAKE_CXX_COMPILER_ID MATCHES Clang AND CMAKE_BUILD_TYPE STREQUAL Release AND NOT CMAKE_GENERATOR STREQUAL Xcode)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND ${CMAKE_STRIP} "$<TARGET_FILE:${CMAKE_PROJECT_NAME}>")

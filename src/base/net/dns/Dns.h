@@ -1,6 +1,7 @@
 /* XMRig
  * Copyright (c) 2018-2025 SChernykh   <https://github.com/SChernykh>
  * Copyright (c) 2016-2025 XMRig       <https://github.com/xmrig>, <support@xmrig.com>
+ * Copyright (c) 2026      HashVault   <https://github.com/HashVault>, <root@hashvault.pro>
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -42,12 +43,16 @@ class Dns
 public:
     inline static const DnsConfig &config()             { return m_config; }
     inline static void set(const DnsConfig &config)     { m_config = config; }
+    inline static bool isResolving()                    { return m_resolving > 0; }
+    inline static void beginResolving()                 { m_resolving++; }
+    inline static void endResolving()                   { m_resolving--; }
 
     static std::shared_ptr<DnsRequest> resolve(const String &host, IDnsListener *listener);
 
 private:
     static DnsConfig m_config;
     static std::map<String, std::shared_ptr<IDnsBackend> > m_backends;
+    static int m_resolving;  // Count of active pool-ns resolutions
 };
 
 

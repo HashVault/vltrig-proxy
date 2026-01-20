@@ -34,21 +34,8 @@
     "mode": "nicehash",
     "pools": [
         {
-            "algo": null,
-            "coin": null,
-            "url": "donate.v2.xmrig.com:5555",
-            "user": "YOUR_WALLET",
-            "pass": "x",
-            "rig-id": null,
-            "keepalive": false,
-            "enabled": true,
-            "tls": false,
-            "sni": false,
-            "tls-fingerprint": null,
-            "daemon": false,
-            "socks5": null,
-            "self-select": null,
-            "submit-to-origin": false
+            "user": "YOUR_WALLET_ADDRESS",
+            "pass": "YOUR_WORKER_NAME",
         }
     ],
     "retries": 2,
