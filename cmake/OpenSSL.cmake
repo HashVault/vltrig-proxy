@@ -8,6 +8,8 @@ if (WITH_TLS)
         set(EXTRA_LIBS ${EXTRA_LIBS} crypt32)
     elseif (APPLE)
         set(OPENSSL_USE_STATIC_LIBS TRUE)
+    elseif (BUILD_STATIC)
+        set(OPENSSL_USE_STATIC_LIBS TRUE)
     endif()
 
     find_package(OpenSSL)

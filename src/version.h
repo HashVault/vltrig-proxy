@@ -1,31 +1,21 @@
 /* XMRig
  * Copyright (c) 2018-2025 SChernykh   <https://github.com/SChernykh>
  * Copyright (c) 2016-2025 XMRig       <https://github.com/xmrig>, <support@xmrig.com>
+ * Copyright (c) 2026      HashVault   <https://github.com/HashVault>, <root@hashvault.pro>
  *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
 #ifndef XMRIG_VERSION_H
 #define XMRIG_VERSION_H
 
-#define APP_ID        "xmrig-proxy"
-#define APP_NAME      "xmrig-proxy"
-#define APP_DESC      "XMRig Stratum proxy"
-#define APP_VERSION   "6.24.0"
-#define APP_DOMAIN    "xmrig.com"
-#define APP_SITE      "www.xmrig.com"
-#define APP_COPYRIGHT "Copyright (C) 2016-2025 xmrig.com"
+#define APP_ID        "vltrig-proxy"
+#define APP_NAME      "vltrig-proxy"
+#define APP_DESC      "vltrig Stratum proxy"
+#define APP_VERSION   "6.24.0.3"
+#define APP_DOMAIN    "hashvault.pro"
+#define APP_SITE      "hashvault.pro"
+#define APP_COPYRIGHT "Copyright (C) 2016-2025 xmrig.com, 2026 hashvault.pro"
 #define APP_KIND      "proxy"
 
 #define APP_VER_MAJOR  6
@@ -33,7 +23,9 @@
 #define APP_VER_PATCH  0
 
 #ifdef _MSC_VER
-#   if (_MSC_VER >= 1930)
+#   if (_MSC_VER >= 1950)
+#       define MSVC_VERSION 2026
+#   elif (_MSC_VER >=1930 && _MSC_VER < 1950)
 #       define MSVC_VERSION 2022
 #   elif (_MSC_VER >= 1920 && _MSC_VER < 1930)
 #       define MSVC_VERSION 2019
@@ -64,6 +56,10 @@
 #    define APP_OS "Linux"
 #elif defined XMRIG_OS_FREEBSD
 #    define APP_OS "FreeBSD"
+#elif defined XMRIG_OS_OPENBSD
+#    define APP_OS "OpenBSD"
+#elif defined XMRIG_OS_HAIKU
+#    define APP_OS "Haiku"
 #else
 #    define APP_OS "Unknown OS"
 #endif
@@ -73,6 +69,8 @@
 
 #ifdef XMRIG_ARM
 #   define APP_ARCH "ARMv" STR2(XMRIG_ARM)
+#elif defined(XMRIG_RISCV)
+#   define APP_ARCH "RISC-V"
 #else
 #   if defined(__x86_64__) || defined(__amd64__) || defined(_M_X64) || defined(_M_AMD64)
 #       define APP_ARCH "x86-64"
