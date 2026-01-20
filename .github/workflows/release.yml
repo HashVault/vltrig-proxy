@@ -1,0 +1,196 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version name for artifacts'
+        default: 'test'
+
+env:
+  VERSION: ${{ inputs.version || github.ref_name }}
+
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    container: alpine:latest
+    steps:
+      - name: Install dependencies
+        run: |
+          apk add --no-cache git build-base cmake linux-headers \
+                             libuv-dev libuv-static openssl-dev openssl-libs-static \
+                             nghttp2-dev nghttp2-static
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: |
+          mkdir -p build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_STATIC=ON
+          make -j$(nproc)
+          strip vltrig-proxy
+
+      - name: Stage artifact
+        run: |
+          mkdir -p staging
+          cp build/vltrig-proxy scripts/vltrig-proxy/run.sh src/config.json staging/
+          cd staging && sha256sum * > SHA256SUMS
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vltrig-proxy-${{ env.VERSION }}-linux-x64
+          path: staging/*
+
+  windows-gcc:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - name: Setup MSYS2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-libuv
+            mingw-w64-ucrt-x86_64-openssl
+            mingw-w64-ucrt-x86_64-nghttp2
+            make git
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build
+        run: |
+          mkdir -p build && cd build
+          cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DBUILD_STATIC=ON -DCMAKE_PREFIX_PATH="${MSYSTEM_PREFIX}"
+          make -j$(nproc)
+          strip vltrig-proxy.exe || true
+
+      - name: Stage artifact
+        run: |
+          mkdir -p staging
+          cp build/vltrig-proxy.exe scripts/vltrig-proxy/run.cmd src/config.json staging/
+          cd staging && sha256sum * > SHA256SUMS
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vltrig-proxy-${{ env.VERSION }}-windows-gcc-x64
+          path: staging/*
+
+  macos-x64:
+    runs-on: macos-13
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          brew install cmake libuv openssl nghttp2
+
+      - name: Build
+        run: |
+          mkdir -p build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DOPENSSL_ROOT_DIR=$(brew --prefix openssl) -DNGHTTP2_ROOT_DIR=$(brew --prefix nghttp2)
+          make -j$(sysctl -n hw.logicalcpu)
+          strip vltrig-proxy
+
+      - name: Stage artifact
+        run: |
+          mkdir -p staging
+          cp build/vltrig-proxy scripts/vltrig-proxy/run.sh src/config.json staging/
+          cd staging && shasum -a 256 * > SHA256SUMS
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vltrig-proxy-${{ env.VERSION }}-macos-x64
+          path: staging/*
+
+  macos-arm64:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          brew install cmake libuv openssl nghttp2
+
+      - name: Build
+        run: |
+          mkdir -p build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -DOPENSSL_ROOT_DIR=$(brew --prefix openssl) -DNGHTTP2_ROOT_DIR=$(brew --prefix nghttp2)
+          make -j$(sysctl -n hw.logicalcpu)
+          strip vltrig-proxy
+
+      - name: Stage artifact
+        run: |
+          mkdir -p staging
+          cp build/vltrig-proxy scripts/vltrig-proxy/run.sh src/config.json staging/
+          cd staging && shasum -a 256 * > SHA256SUMS
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vltrig-proxy-${{ env.VERSION }}-macos-arm64
+          path: staging/*
+
+  release:
+    needs: [linux, windows-gcc, macos-x64, macos-arm64]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Package artifacts
+        run: |
+          cd artifacts
+
+          tar -czvf vltrig-proxy-${{ env.VERSION }}-linux-x64.tar.gz -C vltrig-proxy-${{ env.VERSION }}-linux-x64 .
+          tar -czvf vltrig-proxy-${{ env.VERSION }}-macos-x64.tar.gz -C vltrig-proxy-${{ env.VERSION }}-macos-x64 .
+          tar -czvf vltrig-proxy-${{ env.VERSION }}-macos-arm64.tar.gz -C vltrig-proxy-${{ env.VERSION }}-macos-arm64 .
+          cd vltrig-proxy-${{ env.VERSION }}-windows-gcc-x64 && zip ../vltrig-proxy-${{ env.VERSION }}-windows-gcc-x64.zip * && cd ..
+
+          rm -rf vltrig-proxy-${{ env.VERSION }}-*/
+
+      - name: Generate checksums
+        run: |
+          cd artifacts
+          sha256sum * > SHA256SUMS
+          cat SHA256SUMS
+
+      - name: Sign checksums
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+        run: |
+          if [ -z "$GPG_PRIVATE_KEY" ]; then
+            echo "GPG_PRIVATE_KEY not set, skipping signing"
+            exit 0
+          fi
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import
+          cd artifacts
+          echo "$GPG_PASSPHRASE" | gpg --batch --yes --pinentry-mode loopback \
+               --passphrase-fd 0 --armor --detach-sign SHA256SUMS
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          files: artifacts/*
+          generate_release_notes: true
+          tag_name: ${{ env.VERSION }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
