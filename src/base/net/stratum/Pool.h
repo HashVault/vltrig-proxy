@@ -121,6 +121,8 @@ public:
     inline void setProxy(const ProxyUrl &proxy)         { m_proxy = proxy; }
     inline void setRigId(const String &rigId)           { m_rigId = rigId; }
     inline void setUser(const String &user)             { m_user = user; }
+    inline void setTLS(bool tls)                        { m_flags.set(FLAG_TLS, tls); }
+    inline void setFingerprint(const String &fp)        { m_fingerprint = fp; }
 
     inline bool operator!=(const Pool &other) const     { return !isEqual(other); }
     inline bool operator==(const Pool &other) const     { return isEqual(other); }
