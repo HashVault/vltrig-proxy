@@ -96,25 +96,9 @@ void xmrig::App::onConsoleCommand(char command)
 
 void xmrig::App::onSignal(int signum)
 {
-    switch (signum)
-    {
-    case SIGHUP:
-        LOG_WARN("%s " YELLOW("SIGHUP received, exiting"), Tags::signal());
-        break;
-
-    case SIGTERM:
-        LOG_WARN("%s " YELLOW("SIGTERM received, exiting"), Tags::signal());
-        break;
-
-    case SIGINT:
-        LOG_WARN("%s " YELLOW("SIGINT received, exiting"), Tags::signal());
-        break;
-
-    default:
-        return;
+    if (signum == SIGHUP || signum == SIGTERM || signum == SIGINT) {
+        close();
     }
-
-    close();
 }
 
 

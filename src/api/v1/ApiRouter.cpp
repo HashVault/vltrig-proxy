@@ -35,6 +35,7 @@
 
 
 #include <cmath>
+#include <csignal>
 #include <cstring>
 #include <uv.h>
 
@@ -76,6 +77,17 @@ void xmrig::ApiRouter::onRequest(IApiRequest &request)
         else if (request.url() == "/1/miners") {
             request.accept();
             getMiners(request.reply(), request.doc());
+        }
+    }
+    else if (request.method() == IApiRequest::METHOD_POST) {
+        if (request.url() == "/1/shutdown") {
+            request.accept();
+            request.done(200);
+
+            auto *timer = new uv_timer_t;
+            uv_timer_init(uv_default_loop(), timer);
+            uv_timer_start(timer, [](uv_timer_t *) { raise(SIGTERM); }, 100, 0);
+            return;
         }
     }
 }
