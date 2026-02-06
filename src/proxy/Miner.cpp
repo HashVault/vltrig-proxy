@@ -495,7 +495,9 @@ void xmrig::Miner::sendJob(const char *blob, const char *jobId, const char *targ
             extensions.PushBack("connect", allocator);
 
 #           ifdef XMRIG_FEATURE_TLS
-            extensions.PushBack("tls", allocator);
+            if (m_tlsCtx) {
+                extensions.PushBack("tls", allocator);
+            }
 #           endif
         }
 
