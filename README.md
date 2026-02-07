@@ -26,13 +26,14 @@ A fork of [XMRig Proxy](https://github.com/xmrig/xmrig-proxy) tailored for [Hash
 ## Table of Contents
 
 - [Download](#download)
-- [What is a Stratum Proxy?](#what-is-a-stratum-proxy)
 - [Install via APT (Ubuntu/Debian)](#install-via-apt-ubuntudebian)
 - [Install via DNF (Fedora/RHEL)](#install-via-dnf-fedorarhel)
+- [What is a Stratum Proxy?](#what-is-a-stratum-proxy)
 - [Building](#building)
 - [Web UI](#web-ui)
 - [Versioning](#versioning)
 - [Upstream XMRig Proxy](#upstream-xmrig-proxy)
+- [Contributing](#contributing)
 
 ---
 
@@ -50,6 +51,14 @@ Prebuilt binaries are available on the [**Releases**](https://github.com/HashVau
 ---
 
 ## Install via APT (Ubuntu/Debian)
+
+Quick install:
+
+```
+curl -fsSL https://hashvault.github.io/apt/KEY.gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashvault.gpg && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/hashvault.gpg] https://hashvault.github.io/apt stable main" | sudo tee /etc/apt/sources.list.d/hashvault.list && sudo apt update && sudo apt install -y vltrig-proxy
+```
+
+Step by step:
 
 ```bash
 # Add the GPG key
@@ -80,7 +89,18 @@ sudo apt update && sudo apt upgrade vltrig-proxy
 
 ## Install via DNF (Fedora/RHEL)
 
+Quick install:
+
+```
+sudo rpm --import https://hashvault.github.io/rpm/KEY.gpg && sudo tee /etc/yum.repos.d/hashvault.repo <<< $'[hashvault]\nname=HashVault\nbaseurl=https://hashvault.github.io/rpm\ngpgcheck=1\ngpgkey=https://hashvault.github.io/rpm/KEY.gpg\nenabled=1' && sudo dnf install -y vltrig-proxy
+```
+
+Step by step:
+
 ```bash
+# Import the GPG key
+sudo rpm --import https://hashvault.github.io/rpm/KEY.gpg
+
 # Add the repository
 sudo tee /etc/yum.repos.d/hashvault.repo << 'EOF'
 [hashvault]
