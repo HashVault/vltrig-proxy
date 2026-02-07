@@ -1,2 +1,3 @@
 /build
 /CMakeLists.txt.user
+src/webui/webui_html.h

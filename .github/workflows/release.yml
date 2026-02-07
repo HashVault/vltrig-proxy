@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Install dependencies
         run: |
-          apk add --no-cache git build-base cmake linux-headers \
+          apk add --no-cache git build-base cmake linux-headers python3 \
                              libuv-dev libuv-static openssl-dev openssl-libs-static \
                              nghttp2-dev nghttp2-static
 
@@ -60,6 +60,7 @@ jobs:
           install: >-
             mingw-w64-ucrt-x86_64-gcc
             mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-python
             mingw-w64-ucrt-x86_64-libuv
             mingw-w64-ucrt-x86_64-openssl
             mingw-w64-ucrt-x86_64-nghttp2

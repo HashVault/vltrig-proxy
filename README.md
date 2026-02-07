@@ -2,6 +2,7 @@
 
 [![GitHub release](https://img.shields.io/github/v/release/HashVault/vltrig-proxy)](https://github.com/HashVault/vltrig-proxy/releases)
 [![GitHub downloads](https://img.shields.io/github/downloads/HashVault/vltrig-proxy/total)](https://github.com/HashVault/vltrig-proxy/releases)
+[![Discord](https://img.shields.io/discord/440787079950106635?logo=discord)](https://discord.hashvault.pro)
 [![GitHub license](https://img.shields.io/github/license/HashVault/vltrig-proxy)](https://github.com/HashVault/vltrig-proxy/blob/master/LICENSE)
 
 A fork of [XMRig Proxy](https://github.com/xmrig/xmrig-proxy) tailored for [HashVault](https://hashvault.pro) mining pools.
@@ -11,7 +12,7 @@ A fork of [XMRig Proxy](https://github.com/xmrig/xmrig-proxy) tailored for [Hash
 ### Focus Areas
 
 - Anti-censorship features
-- UI/UX improvements
+- Embedded web management UI
 - HashVault pool optimizations
 - Tracking upstream XMRig Proxy for updates and security fixes
 
@@ -27,6 +28,7 @@ A fork of [XMRig Proxy](https://github.com/xmrig/xmrig-proxy) tailored for [Hash
 - [Download](#download)
 - [What is a Stratum Proxy?](#what-is-a-stratum-proxy)
 - [Building](#building)
+- [Web UI](#web-ui)
 - [Versioning](#versioning)
 - [Upstream XMRig Proxy](#upstream-xmrig-proxy)
 
@@ -50,13 +52,13 @@ Prebuilt binaries are available on the [**Releases**](https://github.com/HashVau
 A stratum proxy sits between your miners and the pool, aggregating connections:
 
 ```
-[Miner 1] ──┐
-[Miner 2] ──┼──> [vltrig-proxy] ──> [Pool]
-[Miner N] ──┘
+[Miner 1] --\
+[Miner 2] ----> [vltrig-proxy] ----> [Pool]
+[Miner N] --/
 ```
 
 **Benefits:**
-- Reduces pool-side connections (100,000 miners → ~400 pool connections)
+- Reduces pool-side connections (100,000 miners -> ~400 pool connections)
 - Handles donation traffic efficiently
 - Supports both NiceHash and simple modes
 - Can manage 100K+ miner connections on minimal hardware
@@ -97,12 +99,61 @@ brew install cmake libuv openssl
 ### Build Commands
 
 ```bash
-mkdir build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-make -j$(nproc)
+make release    # Release build
+make debug      # Debug build with debug logging
+make rebuild    # Clean + release
+make clean      # Remove build directory
 ```
 
 Binary output: `build/vltrig-proxy`
+
+---
+
+## Web UI
+
+vltrig-proxy includes an embedded web management dashboard accessible through the HTTP API.
+
+### Enabling
+
+The Web UI requires the HTTP API to be enabled in your config:
+
+```json
+{
+    "http": {
+        "enabled": true,
+        "host": "127.0.0.1",
+        "port": 4048,
+        "access-token": "your-secret-token",
+        "restricted": false
+    }
+}
+```
+
+Set `restricted` to `false` to allow config changes and restart from the UI. When `true`, the UI is read-only.
+
+### Accessing
+
+Open `http://127.0.0.1:4048` in a browser. If an `access-token` is set, the UI will prompt for it on first visit and store it locally.
+
+If TLS is enabled, use `https://` instead. The proxy auto-generates a self-signed certificate if configured cert files are missing.
+
+### Features
+
+- **Dashboard** - live hashrate, upstreams, miner count, share results, connection status
+- **Workers** - per-worker hashrate and share statistics with sortable columns
+- **Miners** - connected miners list with IP, difficulty, and connection time
+- **Config** - quick-settings toggles (mode, workers, difficulty, TLS per bind, verbose) and a full JSON editor with syntax highlighting
+- **Restart** - graceful shutdown via the UI (requires a process supervisor like systemd to restart)
+
+### Building Without Web UI
+
+To disable the Web UI at compile time:
+
+```bash
+cmake .. -DWITH_WEB_UI=OFF
+```
+
+The Web UI requires Python 3 at build time to compress and embed the HTML into the binary.
 
 ---
 
@@ -116,8 +167,8 @@ Version format: **`X.Y.Z.P`**
 | `.P` | vltrig-proxy patch number (continuous) |
 
 ```
-XMRig Proxy 6.24.0 → vltrig-proxy 6.24.0.1 → 6.24.0.2 → 6.24.0.3
-XMRig Proxy 6.25.0 → vltrig-proxy 6.25.0.4 → 6.25.0.5
+XMRig Proxy 6.24.0 -> vltrig-proxy 6.24.0.1 -> 6.24.0.2 -> 6.24.0.3
+XMRig Proxy 6.25.0 -> vltrig-proxy 6.25.0.4 -> 6.25.0.5
 ```
 
 ---

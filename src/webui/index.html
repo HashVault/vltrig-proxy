@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>vltrig-proxy</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAB9VBMVEUAAAD////U19fS0tLl5eXo6OjT09O/w8O3vLzAwMK7vL64qZ7FcTW9hl+wrarDxMS+wMLAwMPOzs7j4+Oip6iZjYS0iWrFekTGXhXMWgrAYyCvcUWQc16BgYK7w8O0uLrcezmvi3a6vcLCw8btfTLKlHXQ0tLAxMftfTPcqIjJy8+2urvrgj3WrZGxtbedoaTbjlu/raKVmJyGjJG2imybnZ2Hj5ehrLGal5bucBjTfUKMkpWttbbSf0GbiXukrK+rs7fJxcHqaQ/WdjakqquSkpKus7XInoDmbRi2tbGXn6N2dnaSl5vOj2LqbhbMv7alqq1ibHaAiIvMo4fsaxLpfzXUzMWipqlVVVWOlJbPycnHyMiQk5bOWgjsZgjhYQjubxfsaQ1EJQ02NTDraQ2dURkkKCeeRwjtahDuch/pkFCSgnYTFRGOPwdbKgU0ODe/kXDrgTjshT3nrIJ0Xk0ABQQKDw7oqoDudCLnu5zsaxFqUj9iYl+tTAd1PBJ+gIChTxTriEXpoG/rl1xKIwZSSkPnpXbHpYseGhSkSQjtaxHqnWqbRgh5QxnkxrHPo4NuMwbOWwmXUBycnp2rWR1+aVaAf3zkZAvemmogIiBHIgUGBwSJblrrfzPsZwpCIAajSQeQQAgMCgTkYwnbXwiQQAcAAAB1E11LAAAAXXRSTlMAA0evhyEdQFyJu7rHucGpdk05CZa5t8Lp/dS8ts5AtOS4ZLz7vX27+7x6uO+6cqLSt014ucEgMb3+0KqszbdcQL370bMHkbbuwUANsLvxumYarbX12b5zDIXDu04jXh1VAAAAAWJLR0QAiAUdSAAAAAd0SU1FB+gIDBEeHwjIPFsAAADpSURBVBjTY2AAAkYmZhZWBihgY+fg5OLm4eXjFxAUEgYKiIiKiUvExsVLSknLyMoBBeQVEhKTklNS09IzMhWVgALKKglZ2Tm5efkFhZmqakABdY2i4pLS0tKygvIKTS2ggLZOZVV1TW1dfUNjk64eUEDfoDmxpbWtvaOzq9vQCChgbJKQ2NPb1z9hYkamqRlQwNzCMnHS5ClTp03PsLIGu8zGNnHGzFmz58zNsLMHCzg4Os2bX1q6YJ6ziyvE8W7u8xaWLlrs4ekF9Y23j++SCUv9/ANg3mMIDAoOCQ0LZ0CAiMio6BgoGwBAjz5TOVXisAAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyNC0wOC0xMlQxNzozMDozMSswMDowMAj8iy8AAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjQtMDgtMTJUMTc6MzA6MzErMDA6MDB5oTOTAAAAAElFTkSuQmCC">
+<style>
+:root {
+  --bg-primary: #1e2b35;
+  --bg-secondary: #333d4b;
+  --bg-card: #2b333e;
+  --text-primary: #ededed;
+  --text-secondary: rgba(237, 237, 237, 0.7);
+  --text-muted: rgba(237, 237, 237, 0.5);
+  --accent: #ff6600;
+  --accent-hover: #e55c00;
+  --accent-light: rgba(255, 102, 0, 0.3);
+  --danger: #f44336;
+  --success: #4caf50;
+  --warning: #ff9800;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: var(--font);
+  background-color: var(--bg-primary);
+  background-image: url('data:image/webp;base64,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');
+  background-repeat: repeat;
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background-color: var(--accent-hover); color: #fff; }
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--bg-card); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent-hover); }
+nav {
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  min-height: 48px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+nav .logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-right: 2rem;
+  white-space: nowrap;
+}
+nav .logo img { height: 32px; }
+nav .logo .logo-text { display: flex; flex-direction: column; line-height: 1.2; }
+nav .logo .logo-title { font-weight: 700; font-size: 0.95rem; color: var(--text-primary); text-decoration: none; }
+nav .logo .logo-title:hover { color: var(--accent); }
+nav .logo .logo-sub { font-size: 0.7rem; color: var(--text-secondary); }
+nav .tabs { display: flex; gap: 0.25rem; }
+nav .tabs button {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+nav .tabs button svg { flex-shrink: 0; }
+nav .tabs button:hover { color: var(--text-primary); }
+nav .tabs button.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+.btn-logout {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  display: flex;
+  align-items: center;
+}
+.btn-logout:hover { color: var(--danger); }
+#btn-restart { margin-left: auto; }
+.tls-banner {
+  background: var(--warning);
+  color: #1a1a2e;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  text-align: center;
+}
+.tls-banner a { color: #1a1a2e; font-weight: bold; }
+.tls-banner .dismiss { background: none; border: none; color: #1a1a2e; cursor: pointer; font-size: 1.1rem; font-weight: bold; float: right; margin-left: 1rem; }
+footer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.4rem 1.5rem;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  gap: 0.15rem;
+  z-index: 100;
+}
+.foot-status { display: flex; align-items: center; gap: 0.5rem; }
+.foot-status .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--success);
+}
+.foot-status .dot.err { background: var(--danger); }
+.foot-link { color: var(--text-secondary); text-decoration: none; }
+.foot-link:hover { color: var(--accent); }
+.foot-versions { display: flex; gap: 1.5rem; }
+.foot-versions .ver-ok { color: var(--success); }
+.foot-versions .ver-old { color: var(--danger); }
+main { padding: 1.5rem; max-width: 1400px; margin: 0 auto; flex: 1; width: 100%; box-sizing: border-box; }
+section { display: none; }
+section.active { display: block; }
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.cards > .card { flex: 0 1 calc(25% - 0.75rem); min-width: 280px; }
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-card);
+}
+.card h3 {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-bottom: 0.75rem;
+}
+.card .val {
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+.card .sub {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+.card .row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.3rem 0;
+  font-size: 0.85rem;
+}
+.card .row .label { color: var(--text-secondary); }
+.table-wrap {
+  overflow-x: auto;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  box-shadow: var(--shadow-card);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+th, td {
+  padding: 0.5rem 0.5rem;
+  text-align: left;
+  white-space: nowrap;
+}
+th {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  user-select: none;
+  position: sticky;
+  top: 0;
+}
+th:hover { color: var(--text-primary); }
+th .sort { margin-left: 0.1rem; opacity: 0.35; display: inline-flex; vertical-align: middle; }
+th .sort svg { width: 21px; height: 21px; fill: currentColor; }
+th .sort.active { opacity: 1; }
+tr { border-bottom: 1px solid var(--border); }
+tr:last-child { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.05); }
+td { font-family: var(--font-mono); font-size: 0.8rem; }
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.badge-ok { background: rgba(76,175,80,0.15); color: var(--success); }
+.badge-err { background: rgba(244,67,54,0.15); color: var(--danger); }
+.badge-warn { background: rgba(255,152,0,0.15); color: var(--warning); }
+.quick-settings {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  margin-bottom: 1rem;
+}
+.quick-settings h3 {
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+}
+.qs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+.qs-item {
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+}
+.qs-item:nth-child(3n) { border-right: none; }
+.qs-label {
+  font-family: var(--font-mono);
+  color: var(--accent);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.qs-desc {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  line-height: 1.3;
+}
+.qs-control { margin-top: auto; padding-top: 0.35rem; display: flex; flex-direction: column; justify-content: flex-end; }
+.qs-note { font-size: 0.7rem; line-height: 1.3; color: var(--success); margin-top: 0.25rem; }
+.qs-control select,
+.qs-control input[type="text"],
+.qs-control input[type="number"],
+.qs-control input[type="password"] {
+  width: 100%;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  padding: 0.35rem 0.5rem;
+}
+.qs-control select:focus,
+.qs-control input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-light);
+}
+.toggle { display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+.toggle input { display: none; }
+.toggle span {
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  background: var(--border-strong);
+  border-radius: 10px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.toggle span::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s;
+}
+.toggle input:checked + span { background: var(--success); }
+.toggle input:checked + span::after { transform: translateX(16px); }
+.qs-bind-list { display: flex; flex-direction: column; gap: 0.35rem; }
+.qs-bind-entry { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; }
+.qs-bind-entry code {
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+}
+.editor-wrap {
+  position: relative;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+}
+.editor-wrap:focus-within { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-light); }
+.editor-highlight {
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 1rem;
+  font: 0.85rem/1.5 var(--font-mono);
+  tab-size: 4;
+  overflow: hidden;
+  pointer-events: none;
+  white-space: pre;
+  color: var(--text-primary);
+  letter-spacing: normal;
+  word-spacing: normal;
+  overflow-wrap: normal;
+}
+.editor-highlight code { font: inherit; line-height: inherit; }
+#config-editor {
+  display: block;
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  min-height: 500px;
+  background: transparent;
+  border: none;
+  color: transparent;
+  caret-color: var(--text-primary);
+  font: 0.85rem/1.5 var(--font-mono);
+  padding: 1rem;
+  margin: 0;
+  resize: vertical;
+  tab-size: 4;
+  letter-spacing: normal;
+  word-spacing: normal;
+  white-space: pre;
+  overflow-wrap: normal;
+}
+#config-editor:focus { outline: none; }
+#config-editor::selection { color: transparent; background: rgba(255,255,255,0.15); }
+.jk { color: var(--accent); }
+.js { color: var(--success); }
+.jn { color: var(--text-primary); }
+.jl { color: var(--warning); }
+.btn {
+  background: linear-gradient(180deg, var(--accent-hover) 0%, #cc5200 100%);
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  border-radius: 2px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.2);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.btn:hover { background: linear-gradient(180deg, var(--accent) 0%, var(--accent-hover) 100%); transform: translateY(-1px); box-shadow: 0 6px 10px rgba(0,0,0,0.35), 0 2px 4px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.25); }
+.btn:active { transform: translateY(1px); box-shadow: 0 2px 4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-save { background: linear-gradient(180deg, #43a047 0%, #2e7d32 100%); }
+.btn-save:hover { background: linear-gradient(180deg, #4caf50 0%, #388e3c 100%); }
+.btn-danger { background: var(--danger); }
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.toolbar .msg {
+  font-size: 0.85rem;
+}
+.msg-ok { color: var(--success); }
+.msg-err { color: var(--danger); }
+#auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.hidden, #auth-overlay.hidden { display: none; }
+#auth-overlay .box {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 2rem;
+  width: 360px;
+}
+#auth-overlay h2 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+#auth-overlay input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+#auth-overlay input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-light); }
+#auth-overlay .err { color: var(--danger); font-size: 0.8rem; margin-bottom: 0.75rem; }
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+.pagination button {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+.pagination button:disabled { opacity: 0.3; cursor: not-allowed; }
+.hr-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.hr-grid .hr-item {
+  text-align: center;
+}
+.hr-grid .hr-label {
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+.hr-grid .hr-val {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  font-weight: 700;
+}
+.hr-grid .hr-unit {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+#config-help {
+  margin-top: 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+}
+#config-help summary {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  user-select: none;
+}
+#config-help summary:hover { color: var(--text-primary); }
+.help-list { padding: 0 1rem 0.75rem; }
+.help-item { padding: 0.3rem 0; display: flex; gap: 0.75rem; font-size: 0.8rem; }
+.help-item.sub { padding-left: 1.5rem; }
+.help-key { font-family: var(--font-mono); color: var(--accent); white-space: nowrap; min-width: 10rem; }
+.help-item.sub .help-key { min-width: 11rem; }
+.help-desc { color: var(--text-secondary); }
+.help-val { color: var(--text-muted); font-style: italic; }
+@media (max-width: 768px) {
+  nav { padding: 0.5rem 1rem; position: relative; }
+  nav .logo { margin-right: 0; flex: 1; justify-content: center; }
+  .btn-logout { margin-left: 0; }
+  #btn-restart { position: absolute; right: 2.5rem; top: 0.5rem; }
+  #btn-logout { position: absolute; right: 1rem; top: 0.5rem; }
+  nav .tabs { width: 100%; justify-content: center; }
+  main { padding: 0.75rem; }
+  .cards { gap: 0.5rem; }
+  .cards > .card { min-width: 0; flex-basis: 100%; }
+  .qs-grid { grid-template-columns: 1fr; }
+  .qs-item { border-right: none; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><img src="data:image/webp;base64,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" alt=""><div class="logo-text"><a class="logo-title" href="https://github.com/HashVault/vltrig-proxy" target="_blank">vltrig-proxy</a><span class="logo-sub">By HashVault</span></div></div>
+  <div class="tabs">
+    <button class="active" data-view="dashboard"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> Dashboard</button>
+    <button data-view="workers"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Workers</button>
+    <button data-view="miners"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg> Miners</button>
+    <button data-view="config"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Config</button>
+  </div>
+  <button class="btn-logout" id="btn-restart" title="Restart proxy"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></button>
+  <button class="btn-logout" id="btn-logout" title="Clear API token"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+</nav>
+
+<div id="tls-banner" class="tls-banner hidden"></div>
+
+<main>
+  <section id="view-dashboard" class="active">
+    <div class="cards">
+      <div class="card">
+        <h3>Hashrate</h3>
+        <div id="d-hashrate" class="hr-grid"></div>
+      </div>
+      <div class="card">
+        <h3>Results</h3>
+        <div id="d-results"></div>
+      </div>
+      <div class="card">
+        <h3>Miners</h3>
+        <div id="d-miners"></div>
+      </div>
+      <div class="card">
+        <h3>Upstreams</h3>
+        <div id="d-upstreams"></div>
+      </div>
+      <div class="card">
+        <h3>Info</h3>
+        <div id="d-info"></div>
+      </div>
+      <div class="card">
+        <h3>Resources</h3>
+        <div id="d-resources"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="view-workers">
+    <div class="table-wrap">
+      <table id="workers-table">
+        <thead><tr id="workers-head"></tr></thead>
+        <tbody id="workers-body"></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="workers-pag"></div>
+  </section>
+
+  <section id="view-miners">
+    <div class="table-wrap">
+      <table id="miners-table">
+        <thead><tr id="miners-head"></tr></thead>
+        <tbody id="miners-body"></tbody>
+      </table>
+    </div>
+    <div class="pagination" id="miners-pag"></div>
+  </section>
+
+  <section id="view-config">
+    <div class="quick-settings">
+      <h3>Quick Settings</h3>
+      <div class="qs-grid">
+        <div class="qs-item">
+          <div class="qs-label">mode</div>
+          <div class="qs-desc">NiceHash: assigns each miner a unique nonce byte, max 256 miners per connection, works with any pool. Simple: each miner gets its own upstream connection, unlimited miners, higher resource usage. Extra nonce: embeds nonce in coinbase tx, unlimited miners, daemon-only (solo mining).</div>
+          <div class="qs-control">
+            <select id="qs-mode">
+              <option value="nicehash">nicehash</option>
+              <option value="simple">simple</option>
+              <option value="extra_nonce">extra_nonce</option>
+            </select>
+          </div>
+        </div>
+        <div class="qs-item">
+          <div class="qs-label">workers</div>
+          <div class="qs-desc">How to group miners for per-worker statistics. rig_id uses the miner's rig identifier, user groups by wallet address, etc. Set to none to disable worker stats.</div>
+          <div class="qs-control">
+            <select id="qs-workers">
+              <option value="rig_id">rig_id</option>
+              <option value="user">user</option>
+              <option value="password">password</option>
+              <option value="agent">agent</option>
+              <option value="ip">ip</option>
+              <option value="none">none</option>
+            </select>
+          </div>
+        </div>
+        <div class="qs-item">
+          <div class="qs-label">custom-diff</div>
+          <div class="qs-desc">Override the pool's difficulty with a fixed value for all miners. Must be &gt;= 100. Set to 0 to use pool difficulty (recommended for most setups).</div>
+          <div class="qs-control">
+            <input type="number" id="qs-custom-diff" min="0" step="1" placeholder="0 = off">
+          </div>
+        </div>
+        <div class="qs-item">
+          <div class="qs-label">custom-diff-stats</div>
+          <div class="qs-desc">When enabled, hashrate statistics are calculated from custom difficulty shares instead of pool shares. Only relevant when custom-diff is set.</div>
+          <div class="qs-control">
+            <label class="toggle"><input type="checkbox" id="qs-custom-diff-stats"><span></span></label>
+          </div>
+        </div>
+        <div class="qs-item">
+          <div class="qs-label">http.restricted</div>
+          <div class="qs-desc">When enabled, the API is read-only - config changes via API are blocked. Disable to allow saving config from this Web UI.</div>
+          <div class="qs-control">
+            <label class="toggle"><input type="checkbox" id="qs-http-restricted"><span></span></label>
+          </div>
+        </div>
+        <div class="qs-item">
+          <div class="qs-label">bind[].tls</div>
+          <div class="qs-desc">Strict TLS mode. When unchecked, the port accepts both TLS and plaintext miners automatically. Check to reject plaintext and require TLS only.</div>
+          <div class="qs-control">
+            <div class="qs-bind-list" id="qs-bind-tls"></div>
+          </div>
+          <div class="qs-note" id="qs-bind-tls-note"></div>
+        </div>
+        <div class="qs-item">
+          <div class="qs-label">access-password</div>
+          <div class="qs-desc">Password that miners must send to authenticate. Leave empty for no password requirement.</div>
+          <div class="qs-control">
+            <input type="text" id="qs-access-password" placeholder="empty = no password">
+          </div>
+        </div>
+        <div class="qs-item">
+          <div class="qs-label">http.access-token</div>
+          <div class="qs-desc">Bearer token for HTTP API authentication. Used by this Web UI to access the API.</div>
+          <div class="qs-control">
+            <input type="password" id="qs-http-access-token" placeholder="empty = no token">
+          </div>
+        </div>
+        <div class="qs-item">
+          <div class="qs-label">verbose</div>
+          <div class="qs-desc">Log per-share accepts, login denials, and pool connection details.</div>
+          <div class="qs-control">
+            <label class="toggle"><input type="checkbox" id="qs-verbose"><span></span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="editor-wrap">
+      <pre class="editor-highlight" aria-hidden="true"><code id="config-highlight"></code></pre>
+      <textarea id="config-editor" spellcheck="false" wrap="off"></textarea>
+    </div>
+    <div class="toolbar">
+      <button class="btn btn-save" id="config-save"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save</button>
+      <button class="btn" id="config-reload"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg> Reset</button>
+      <span class="msg" id="config-msg"></span>
+    </div>
+    <details id="config-help">
+      <summary>Configuration Reference</summary>
+      <div class="help-list">
+        <div class="help-item"><div class="help-key">access-log-file</div><div class="help-desc">Path to worker access log file. <span class="help-val">String or null</span></div></div>
+        <div class="help-item"><div class="help-key">access-password</div><div class="help-desc">Password miners must send to connect. <span class="help-val">String or null</span></div></div>
+        <div class="help-item"><div class="help-key">algo-ext</div><div class="help-desc">Enable algo protocol extension. <span class="help-val">true / false (default: true)</span></div></div>
+        <div class="help-item"><div class="help-key">api</div><div class="help-desc">API identification settings. <span class="help-val">Object</span></div></div>
+        <div class="help-item sub"><div class="help-key">api.id</div><div class="help-desc">Custom instance ID. <span class="help-val">String or null</span></div></div>
+        <div class="help-item sub"><div class="help-key">api.worker-id</div><div class="help-desc">Custom worker ID. <span class="help-val">String or null</span></div></div>
+        <div class="help-item"><div class="help-key">background</div><div class="help-desc">Run as background daemon. <span class="help-val">true / false (default: false)</span></div></div>
+        <div class="help-item"><div class="help-key">bind</div><div class="help-desc">Listen addresses for miner connections. <span class="help-val">Array of objects</span></div></div>
+        <div class="help-item sub"><div class="help-key">bind[].host</div><div class="help-desc">IP address to bind. <span class="help-val">String (default: "0.0.0.0")</span></div></div>
+        <div class="help-item sub"><div class="help-key">bind[].port</div><div class="help-desc">Port number. <span class="help-val">Integer (default: 3333)</span></div></div>
+        <div class="help-item sub"><div class="help-key">bind[].tls</div><div class="help-desc">Strict TLS mode. When false, the port auto-detects TLS and plaintext. When true, only TLS connections are accepted. <span class="help-val">true / false (default: false)</span></div></div>
+        <div class="help-item"><div class="help-key">colors</div><div class="help-desc">Colored console output. <span class="help-val">true / false (default: true)</span></div></div>
+        <div class="help-item"><div class="help-key">custom-diff</div><div class="help-desc">Override pool difficulty for miners. <span class="help-val">Integer &gt;= 100, or 0 to disable</span></div></div>
+        <div class="help-item"><div class="help-key">custom-diff-stats</div><div class="help-desc">Calculate stats using custom diff shares. <span class="help-val">true / false (default: false)</span></div></div>
+        <div class="help-item"><div class="help-key">dns</div><div class="help-desc">DNS resolution settings. <span class="help-val">Object</span></div></div>
+        <div class="help-item sub"><div class="help-key">dns.ip_version</div><div class="help-desc">IP version preference. <span class="help-val">0=auto, 4=IPv4, 6=IPv6</span></div></div>
+        <div class="help-item sub"><div class="help-key">dns.ttl</div><div class="help-desc">DNS cache TTL in seconds. <span class="help-val">Integer (default: 30)</span></div></div>
+        <div class="help-item sub"><div class="help-key">dns.pool-ns</div><div class="help-desc">Enable DNS-over-HTTPS with pool NS. <span class="help-val">true / false (default: true)</span></div></div>
+        <div class="help-item sub"><div class="help-key">dns.pool-ns-timeout</div><div class="help-desc">Pool NS timeout in ms. <span class="help-val">Integer (default: 1000)</span></div></div>
+        <div class="help-item sub"><div class="help-key">dns.doh-primary</div><div class="help-desc">Primary DoH server. <span class="help-val">String (default: "dns.google")</span></div></div>
+        <div class="help-item sub"><div class="help-key">dns.doh-fallback</div><div class="help-desc">Fallback DoH server. <span class="help-val">String (default: "dns.nextdns.io")</span></div></div>
+        <div class="help-item"><div class="help-key">donate-level</div><div class="help-desc">Donation percentage. <span class="help-val">0-100 (default: 0)</span></div></div>
+        <div class="help-item"><div class="help-key">donate-over-proxy</div><div class="help-desc">Donation mode. <span class="help-val">0=none, 1=auto, 2=always (default: 1)</span></div></div>
+        <div class="help-item"><div class="help-key">http</div><div class="help-desc">HTTP API server settings. <span class="help-val">Object</span></div></div>
+        <div class="help-item sub"><div class="help-key">http.enabled</div><div class="help-desc">Enable API server. <span class="help-val">true / false (default: false)</span></div></div>
+        <div class="help-item sub"><div class="help-key">http.host</div><div class="help-desc">Bind address. <span class="help-val">String (default: "127.0.0.1")</span></div></div>
+        <div class="help-item sub"><div class="help-key">http.port</div><div class="help-desc">Port number. <span class="help-val">Integer (default: 0)</span></div></div>
+        <div class="help-item sub"><div class="help-key">http.access-token</div><div class="help-desc">Bearer token for API auth. <span class="help-val">String or null</span></div></div>
+        <div class="help-item sub"><div class="help-key">http.restricted</div><div class="help-desc">Read-only API mode. <span class="help-val">true / false (default: true)</span></div></div>
+        <div class="help-item"><div class="help-key">log-file</div><div class="help-desc">Path to main log file. <span class="help-val">String or null</span></div></div>
+        <div class="help-item"><div class="help-key">mode</div><div class="help-desc">Proxy operation mode. <span class="help-val">"nicehash" / "simple" / "extra_nonce"</span></div></div>
+        <div class="help-item"><div class="help-key">pools</div><div class="help-desc">Mining pool list. <span class="help-val">Array of objects</span></div></div>
+        <div class="help-item sub"><div class="help-key">pools[].url</div><div class="help-desc">Pool address. <span class="help-val">String (host:port)</span></div></div>
+        <div class="help-item sub"><div class="help-key">pools[].user</div><div class="help-desc">Wallet address or username. <span class="help-val">String</span></div></div>
+        <div class="help-item sub"><div class="help-key">pools[].pass</div><div class="help-desc">Pool password. <span class="help-val">String (default: "x")</span></div></div>
+        <div class="help-item sub"><div class="help-key">pools[].rig-id</div><div class="help-desc">Rig identifier for pool stats. <span class="help-val">String or null</span></div></div>
+        <div class="help-item sub"><div class="help-key">pools[].algo</div><div class="help-desc">Mining algorithm. <span class="help-val">String or null</span></div></div>
+        <div class="help-item sub"><div class="help-key">pools[].coin</div><div class="help-desc">Coin name. <span class="help-val">String or null</span></div></div>
+        <div class="help-item sub"><div class="help-key">pools[].tls</div><div class="help-desc">Enable TLS to pool. <span class="help-val">true / false (default: false)</span></div></div>
+        <div class="help-item sub"><div class="help-key">pools[].tls-fingerprint</div><div class="help-desc">Pin pool TLS certificate. <span class="help-val">Hex string or null</span></div></div>
+        <div class="help-item sub"><div class="help-key">pools[].sni</div><div class="help-desc">Enable Server Name Indication. <span class="help-val">true / false</span></div></div>
+        <div class="help-item sub"><div class="help-key">pools[].keepalive</div><div class="help-desc">Keep connection alive. <span class="help-val">true / false / integer seconds</span></div></div>
+        <div class="help-item sub"><div class="help-key">pools[].nicehash</div><div class="help-desc">Force NiceHash mode. <span class="help-val">true / false</span></div></div>
+        <div class="help-item sub"><div class="help-key">pools[].enabled</div><div class="help-desc">Enable this pool entry. <span class="help-val">true / false (default: true)</span></div></div>
+        <div class="help-item sub"><div class="help-key">pools[].self-select</div><div class="help-desc">Daemon RPC URL for Stratum Self-Select. <span class="help-val">String or null (e.g. "http://127.0.0.1:18081")</span></div></div>
+        <div class="help-item sub"><div class="help-key">pools[].submit-to-origin</div><div class="help-desc">Also submit found blocks directly to the daemon specified in self-select. <span class="help-val">true / false (default: false)</span></div></div>
+        <div class="help-item sub"><div class="help-key">pools[].daemon</div><div class="help-desc">Use daemon RPC mode. <span class="help-val">true / false</span></div></div>
+        <div class="help-item sub"><div class="help-key">pools[].daemon-poll-interval</div><div class="help-desc">Daemon poll interval in ms. <span class="help-val">Integer (default: 1000)</span></div></div>
+        <div class="help-item"><div class="help-key">print-time</div><div class="help-desc">Status message interval in seconds. <span class="help-val">0-3600 (default: 0)</span></div></div>
+        <div class="help-item"><div class="help-key">retries</div><div class="help-desc">Retries before switching pool. <span class="help-val">Integer (default: 2)</span></div></div>
+        <div class="help-item"><div class="help-key">retry-pause</div><div class="help-desc">Seconds between retries. <span class="help-val">Integer (default: 1)</span></div></div>
+        <div class="help-item"><div class="help-key">reuse-timeout</div><div class="help-desc">How long to keep idle upstream connections alive for reuse when a miner disconnects. Simple mode only. 0 = close immediately. <span class="help-val">Integer seconds (default: 0)</span></div></div>
+        <div class="help-item"><div class="help-key">syslog</div><div class="help-desc">Log to syslog (Linux). <span class="help-val">true / false (default: false)</span></div></div>
+        <div class="help-item"><div class="help-key">tls</div><div class="help-desc">Server TLS configuration for incoming connections. <span class="help-val">Object</span></div></div>
+        <div class="help-item sub"><div class="help-key">tls.enabled</div><div class="help-desc">Enable TLS. <span class="help-val">true / false (default: true)</span></div></div>
+        <div class="help-item sub"><div class="help-key">tls.protocols</div><div class="help-desc">Allowed TLS versions. <span class="help-val">"TLSv1.2 TLSv1.3" or null (all)</span></div></div>
+        <div class="help-item sub"><div class="help-key">tls.cert</div><div class="help-desc">Certificate file path. <span class="help-val">String (PEM)</span></div></div>
+        <div class="help-item sub"><div class="help-key">tls.cert_key</div><div class="help-desc">Private key file path. <span class="help-val">String (PEM)</span></div></div>
+        <div class="help-item sub"><div class="help-key">tls.ciphers</div><div class="help-desc">TLS 1.2 cipher list. <span class="help-val">String or null</span></div></div>
+        <div class="help-item sub"><div class="help-key">tls.ciphersuites</div><div class="help-desc">TLS 1.3 cipher suites. <span class="help-val">String or null</span></div></div>
+        <div class="help-item sub"><div class="help-key">tls.dhparam</div><div class="help-desc">DH parameters file. <span class="help-val">String (PEM) or null</span></div></div>
+        <div class="help-item"><div class="help-key">user-agent</div><div class="help-desc">Custom User-Agent for pool connections. <span class="help-val">String or null</span></div></div>
+        <div class="help-item"><div class="help-key">verbose</div><div class="help-desc">Verbose logging level. <span class="help-val">true / false or integer 0+ (default: false)</span></div></div>
+        <div class="help-item"><div class="help-key">watch</div><div class="help-desc">Auto-reload config on file change. <span class="help-val">true / false (default: true)</span></div></div>
+        <div class="help-item"><div class="help-key">workers</div><div class="help-desc">Worker grouping mode for statistics. <span class="help-val">"rig_id" / "user" / "password" / "agent" / "ip" / "none"</span></div></div>
+      </div>
+    </details>
+  </section>
+</main>
+
+<footer>
+  <span class="foot-status">API: <span class="dot" id="status-dot"></span> <span id="status-text">connecting...</span></span>
+  <div class="foot-versions">
+    <a class="foot-link" href="https://github.com/HashVault/vltrig-proxy/releases" target="_blank">V.Local: <span id="foot-ver-local">-</span></a>
+    <a class="foot-link" href="https://github.com/HashVault/vltrig-proxy/releases" target="_blank">V.Remote: <span id="foot-ver-remote">-</span></a>
+  </div>
+</footer>
+
+<div id="auth-overlay" class="hidden">
+  <div class="box">
+    <h2>API Token Required</h2>
+    <div class="err" id="auth-err"></div>
+    <input type="password" id="auth-token" placeholder="Enter Bearer token">
+    <button class="btn" id="auth-submit" style="width:100%">Login</button>
+  </div>
+</div>
+
+<script>
+(() => {
+  const S = {
+    token: localStorage.getItem('api_token') || '',
+    view: 'dashboard',
+    poll: null,
+    sort: { workers: { col: 0, asc: true }, miners: { col: 0, asc: true } },
+    page: { workers: 0, miners: 0 },
+    pageSize: 100,
+    data: {}
+  };
+
+  // --- API ---
+
+  function api(method, path, body) {
+    const h = {};
+    if (S.token) h['Authorization'] = `Bearer ${S.token}`;
+    if (body) h['Content-Type'] = 'application/json';
+    return fetch(path, {
+      method: method,
+      headers: h,
+      body: body ? JSON.stringify(body) : undefined
+    }).then(r => {
+      if (r.status === 401 || r.status === 403) {
+        showAuth('Invalid API token');
+        return Promise.reject(new Error('Unauthorized'));
+      }
+      setStatus(true);
+      if (r.status === 204) return null;
+      if (!r.ok) return r.json().then(e => Promise.reject(e));
+      return r.json();
+    }).catch(e => {
+      if (e.message !== 'Unauthorized') setStatus(false);
+      return Promise.reject(e);
+    });
+  }
+
+  // --- Status ---
+
+  function setStatus(ok) {
+    const dot = document.getElementById('status-dot');
+    const txt = document.getElementById('status-text');
+    dot.className = ok ? 'dot' : 'dot err';
+    txt.textContent = ok ? 'connected' : 'disconnected';
+  }
+
+  // --- Auth ---
+
+  function showAuth(msg) {
+    document.getElementById('auth-overlay').className = '';
+    document.getElementById('auth-err').textContent = msg || '';
+    document.getElementById('auth-token').focus();
+  }
+
+  function hideAuth() {
+    document.getElementById('auth-overlay').className = 'hidden';
+    document.getElementById('auth-err').textContent = '';
+  }
+
+  document.getElementById('auth-submit').onclick = () => {
+    S.token = document.getElementById('auth-token').value.trim();
+    localStorage.setItem('api_token', S.token);
+    api('GET', '/1/summary').then(() => {
+      hideAuth();
+      poll();
+    }).catch(() => {
+      document.getElementById('auth-err').textContent = 'Invalid token';
+    });
+  };
+
+  document.getElementById('auth-token').onkeydown = e => {
+    if (e.key === 'Enter') document.getElementById('auth-submit').click();
+  };
+
+  // --- Navigation ---
+
+  document.querySelectorAll('nav .tabs button').forEach(tab => {
+    tab.onclick = () => switchView(tab.dataset.view);
+  });
+
+  function switchView(name) {
+    S.view = name;
+    document.querySelectorAll('main section').forEach(sec => {
+      sec.className = sec.id === `view-${name}` ? 'active' : '';
+    });
+    document.querySelectorAll('nav .tabs button').forEach(btn => {
+      btn.className = btn.dataset.view === name ? 'active' : '';
+    });
+    if (name === 'config' && !S.data.config) loadConfig();
+    poll();
+  }
+
+  // --- Formatting ---
+
+  function stripZ(n) { return parseFloat(n).toString(); }
+
+  function fmtHrParts(v) {
+    if (v === null || v === undefined || v === 0) return ['0', 'H/s'];
+    if (v >= 1e6) return [stripZ((v / 1e6).toFixed(2)), 'GH/s'];
+    if (v >= 1e3) return [stripZ((v / 1e3).toFixed(2)), 'MH/s'];
+    if (v >= 1) return [stripZ(v.toFixed(2)), 'KH/s'];
+    return [stripZ((v * 1000).toFixed(1)), 'H/s'];
+  }
+
+  function fmtHr(v) {
+    const p = fmtHrParts(v);
+    return `${p[0]} ${p[1]}`;
+  }
+
+  function fmtBytes(b) {
+    if (b >= 1073741824) return `${(b / 1073741824).toFixed(1)} GB`;
+    if (b >= 1048576) return `${(b / 1048576).toFixed(1)} MB`;
+    if (b >= 1024) return `${(b / 1024).toFixed(1)} KB`;
+    return `${b} B`;
+  }
+
+  function fmtUptime(sec) {
+    let s = Math.floor(sec);
+    const d = Math.floor(s / 86400); s %= 86400;
+    const h = Math.floor(s / 3600); s %= 3600;
+    const m = Math.floor(s / 60); s %= 60;
+    if (d > 0) return `${d}d ${h}h ${m}m`;
+    if (h > 0) return `${h}h ${m}m ${s}s`;
+    return `${m}m ${s}s`;
+  }
+
+  function fmtNum(n) {
+    if (n === null || n === undefined) return '0';
+    return n.toLocaleString();
+  }
+
+  function fmtTime(ms) {
+    if (!ms) return 'never';
+    const ago = Date.now() - ms;
+    if (ago < 60000) return `${Math.floor(ago / 1000)}s ago`;
+    if (ago < 3600000) return `${Math.floor(ago / 60000)}m ago`;
+    return `${Math.floor(ago / 3600000)}h ago`;
+  }
+
+  // --- Dashboard ---
+
+  function renderDashboard(d) {
+    if (!d) return;
+    const hr = d.hashrate && d.hashrate.total ? d.hashrate.total : [0,0,0,0,0];
+    const labels = ['1m', '10m', '1h', '12h', '24h'];
+    const html = labels.map((label, i) => {
+      const p = fmtHrParts(hr[i]);
+      return `<div class="hr-item"><div class="hr-label">${label}</div><div class="hr-val">${p[0]}</div><div class="hr-unit">${p[1]}</div></div>`;
+    }).join('');
+    document.getElementById('d-hashrate').innerHTML = html;
+
+    const mn = d.miners || {};
+    document.getElementById('d-miners').innerHTML = row('Active', mn.now || 0) + row('Max', mn.max || 0) + row('Workers', d.workers || 0);
+
+    const up = d.upstreams || {};
+    document.getElementById('d-upstreams').innerHTML = row('Active', up.active || 0) + row('Sleep', up.sleep || 0) + row('Error', up.error || 0, up.error > 0 ? 'danger' : '') + row('Total', up.total || 0);
+
+    const r = d.results || {};
+    document.getElementById('d-results').innerHTML = row('Accepted', fmtNum(r.accepted)) + row('Rejected', fmtNum(r.rejected), r.rejected > 0 ? 'warning' : '') + row('Invalid', fmtNum(r.invalid), r.invalid > 0 ? 'danger' : '') + row('Expired', fmtNum(r.expired)) + row('Avg Time', `${(r.avg_time || 0).toFixed(1)} s`) + row('Latency', `${(r.latency || 0).toFixed(1)} ms`) + row('Hashes Total', fmtNum(r.hashes_total)) + row('Hashes Donate', fmtNum(r.hashes_donate));
+
+    document.getElementById('d-info').innerHTML = row('Mode', d.mode || '-', d.mode === 'nicehash' ? 'success' : d.mode === 'simple' ? 'danger' : '') + row('Uptime', fmtUptime(d.uptime || 0)) + row('Worker ID', d.worker_id || '-') + row('Donate', `${d.donate_level || 0}%`);
+    document.getElementById('foot-ver-local').textContent = d.version ? `v${d.version}` : '-';
+
+    const res = d.resources || {};
+    const mem = res.memory || {};
+    const la = res.load_average || [0,0,0];
+    document.getElementById('d-resources').innerHTML = row('RSS', fmtBytes(mem.resident_set_memory || 0)) + row('Free', fmtBytes(mem.free || 0)) + row('Total', fmtBytes(mem.total || 0)) + row('Load', `${la[0].toFixed(2)} / ${la[1].toFixed(2)} / ${la[2].toFixed(2)}`) + row('CPUs', res.hardware_concurrency || '-');
+  }
+
+  function row(label, val, color) {
+    const style = color ? ` style="color:var(--${color})"` : '';
+    return `<div class="row"><span class="label">${label}</span><span${style}>${val}</span></div>`;
+  }
+
+  // --- Workers Table ---
+
+  const workerCols = [
+    { name: 'Name', key: 0 },
+    { name: 'IP', key: 1 },
+    { name: 'Connections', key: 2 },
+    { name: 'Accepted', key: 3 },
+    { name: 'Rejected', key: 4 },
+    { name: 'Invalid', key: 5 },
+    { name: 'Hashes', key: 6 },
+    { name: 'Last Hash', key: 7 },
+    { name: '1m HR', key: 8 },
+    { name: '10m HR', key: 9 },
+    { name: '1h HR', key: 10 },
+    { name: '12h HR', key: 11 },
+    { name: '24h HR', key: 12 }
+  ];
+
+  function renderWorkers(d) {
+    if (!d) return;
+    const workers = d.workers || [];
+    renderTableHead('workers-head', workerCols, 'workers');
+    sortData(workers, S.sort.workers);
+    updateSortArrows('workers-head', 'workers');
+    renderTablePage('workers-body', 'workers-pag', workers, 'workers', w => {
+      let tr = '<tr>';
+      tr += `<td>${esc(w[0])}</td>`;
+      tr += `<td>${esc(w[1])}</td>`;
+      tr += `<td>${w[2]}</td>`;
+      tr += `<td>${fmtNum(w[3])}</td>`;
+      tr += `<td>${fmtNum(w[4])}</td>`;
+      tr += `<td>${fmtNum(w[5])}</td>`;
+      tr += `<td>${fmtNum(w[6])}</td>`;
+      tr += `<td>${fmtTime(w[7])}</td>`;
+      for (let i = 8; i <= 12; i++) tr += `<td>${fmtHr(w[i])}</td>`;
+      tr += '</tr>';
+      return tr;
+    });
+  }
+
+  // --- Miners Table ---
+
+  const minerCols = [
+    { name: 'ID', key: 0 },
+    { name: 'IP', key: 1 },
+    { name: 'TX', key: 2 },
+    { name: 'RX', key: 3 },
+    { name: 'State', key: 4 },
+    { name: 'Diff', key: 5 },
+    { name: 'User', key: 6 },
+    { name: 'Password', key: 7 },
+    { name: 'Rig ID', key: 8 },
+    { name: 'Agent', key: 9 }
+  ];
+
+  function renderMiners(d) {
+    if (!d) return;
+    const miners = d.miners || [];
+    renderTableHead('miners-head', minerCols, 'miners');
+    sortData(miners, S.sort.miners);
+    updateSortArrows('miners-head', 'miners');
+    renderTablePage('miners-body', 'miners-pag', miners, 'miners', m => {
+      const tr = `<tr>
+        <td>${m[0]}</td>
+        <td>${esc(m[1])}</td>
+        <td>${fmtBytes(m[2])}</td>
+        <td>${fmtBytes(m[3])}</td>
+        <td>${stateBadge(m[4])}</td>
+        <td>${fmtNum(m[5])}</td>
+        <td>${esc(m[6])}</td>
+        <td>${esc(m[7])}</td>
+        <td>${esc(m[8])}</td>
+        <td>${esc(m[9])}</td>
+      </tr>`;
+      return tr;
+    });
+  }
+
+  function stateBadge(s) {
+    const cls = s === 2 ? 'badge-ok' : s === 0 ? 'badge-err' : 'badge-warn';
+    const txt = s === 2 ? 'active' : s === 0 ? 'dead' : 'connecting';
+    return `<span class="badge ${cls}">${txt}</span>`;
+  }
+
+  // --- Table Helpers ---
+
+  function renderTableHead(id, cols, key) {
+    const el = document.getElementById(id);
+    if (el.children.length > 0) return;
+    const html = cols.map((c, i) =>
+      `<th data-col="${i}" data-key="${key}">${c.name}<span class="sort"></span></th>`
+    ).join('');
+    el.innerHTML = html;
+    el.querySelectorAll('th').forEach(th => {
+      th.onclick = () => {
+        const col = parseInt(th.getAttribute('data-col'));
+        const k = th.getAttribute('data-key');
+        if (S.sort[k].col === col) {
+          S.sort[k].asc = !S.sort[k].asc;
+        } else {
+          S.sort[k].col = col;
+          S.sort[k].asc = true;
+        }
+        S.page[k] = 0;
+        poll();
+      };
+    });
+  }
+
+  function sortData(arr, sortState) {
+    const col = sortState.col;
+    const asc = sortState.asc;
+    arr.sort((a, b) => {
+      const va = a[col], vb = b[col];
+      if (va === vb) return 0;
+      if (va === null || va === undefined) return 1;
+      if (vb === null || vb === undefined) return -1;
+      if (typeof va === 'string') return asc ? va.localeCompare(vb) : vb.localeCompare(va);
+      return asc ? va - vb : vb - va;
+    });
+  }
+
+  function updateSortArrows(headId, key) {
+    const ths = document.getElementById(headId).querySelectorAll('th');
+    const st = S.sort[key];
+    ths.forEach(th => {
+      const sp = th.querySelector('.sort');
+      const col = parseInt(th.getAttribute('data-col'));
+      if (col === st.col) {
+        sp.innerHTML = st.asc ? '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 14l5-5 5 5z"/></svg>' : '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>';
+        sp.className = 'sort active';
+      } else {
+        sp.innerHTML = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 10l5 5 5-5z"/></svg>';
+        sp.className = 'sort';
+      }
+    });
+  }
+
+  function renderTablePage(bodyId, pagId, data, key, rowFn) {
+    let page = S.page[key];
+    const total = data.length;
+    const pages = Math.ceil(total / S.pageSize) || 1;
+    if (page >= pages) page = S.page[key] = pages - 1;
+    const start = page * S.pageSize;
+    const end = Math.min(start + S.pageSize, total);
+    let html = '';
+    for (let i = start; i < end; i++) {
+      html += rowFn(data[i]);
+    }
+    document.getElementById(bodyId).innerHTML = html || '<tr><td colspan="99" style="text-align:center;color:var(--text-secondary);padding:2rem">No data</td></tr>';
+
+    if (total > S.pageSize) {
+      document.getElementById(pagId).innerHTML =
+        `<button ${page === 0 ? 'disabled' : ''} data-key="${key}" data-dir="-1">&laquo; Prev</button>` +
+        `<span>${page + 1} / ${pages} (${total} total)</span>` +
+        `<button ${page >= pages - 1 ? 'disabled' : ''} data-key="${key}" data-dir="1">Next &raquo;</button>`;
+      document.getElementById(pagId).querySelectorAll('button').forEach(btn => {
+        btn.onclick = () => {
+          S.page[btn.getAttribute('data-key')] += parseInt(btn.getAttribute('data-dir'));
+          poll();
+        };
+      });
+    } else {
+      document.getElementById(pagId).innerHTML = total > 0 ? `<span>${total} total</span>` : '';
+    }
+  }
+
+  function esc(s) {
+    if (s === null || s === undefined) return '';
+    const d = document.createElement('div');
+    d.appendChild(document.createTextNode(String(s)));
+    return d.innerHTML;
+  }
+
+  // --- Config ---
+
+  const configEditor = document.getElementById('config-editor');
+  const configHL = document.getElementById('config-highlight');
+
+  function highlightJSON(str) {
+    const h = str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return h.replace(
+      /("(?:\\.|[^"\\])*")(\s*:)?|\b(true|false|null)\b|-?\b\d+\.?\d*(?:[eE][+-]?\d+)?\b/g,
+      (m, s, colon, lit) => {
+        if (s) return colon ? `<span class="jk">${s}</span>${colon}` : `<span class="js">${s}</span>`;
+        if (lit) return `<span class="jl">${m}</span>`;
+        return `<span class="jn">${m}</span>`;
+      }
+    );
+  }
+
+  function syncHighlight() {
+    configHL.innerHTML = highlightJSON(configEditor.value);
+  }
+
+  configEditor.addEventListener('input', syncHighlight);
+  configEditor.addEventListener('scroll', () => {
+    const pre = configHL.parentElement;
+    pre.scrollTop = configEditor.scrollTop;
+    pre.scrollLeft = configEditor.scrollLeft;
+  });
+
+  function syncConfigToTextarea() {
+    configEditor.value = JSON.stringify(S.data.config, null, 4);
+    syncHighlight();
+  }
+
+  function populateQuickSettings(cfg) {
+    document.getElementById('qs-mode').value = cfg.mode || 'nicehash';
+    document.getElementById('qs-workers').value = cfg.workers || 'rig_id';
+    document.getElementById('qs-custom-diff').value = cfg['custom-diff'] || 0;
+    document.getElementById('qs-custom-diff-stats').checked = !!cfg['custom-diff-stats'];
+    document.getElementById('qs-http-restricted').checked = !!(cfg.http && cfg.http.restricted);
+    document.getElementById('qs-access-password').value = cfg['access-password'] || '';
+    document.getElementById('qs-http-access-token').value = (cfg.http && cfg.http['access-token']) || '';
+    document.getElementById('qs-verbose').checked = !!cfg.verbose;
+
+    const container = document.getElementById('qs-bind-tls');
+    container.innerHTML = '';
+    const binds = cfg.bind;
+    if (Array.isArray(binds)) {
+      binds.forEach((b, i) => {
+        const entry = document.createElement('div');
+        entry.className = 'qs-bind-entry';
+        const label = document.createElement('label');
+        label.className = 'toggle';
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = !!b.tls;
+        cb.setAttribute('data-bind-index', i);
+        cb.onchange = () => {
+          S.data.config.bind[i].tls = cb.checked;
+          syncConfigToTextarea();
+        };
+        const sp = document.createElement('span');
+        label.appendChild(cb);
+        label.appendChild(sp);
+        const code = document.createElement('code');
+        code.textContent = `${b.host || '0.0.0.0'}:${b.port || 3333}`;
+        entry.appendChild(label);
+        entry.appendChild(code);
+        container.appendChild(entry);
+      });
+    }
+
+    const note = document.getElementById('qs-bind-tls-note');
+    const tlsActive = cfg.tls && cfg.tls.enabled !== false;
+    const allStrict = Array.isArray(binds) && binds.every(b => b.tls);
+    if (tlsActive && !allStrict) {
+      note.textContent = 'TLS is active. Unchecked ports accept both TLS and plaintext miners automatically.';
+    } else if (!tlsActive) {
+      note.textContent = 'TLS is disabled. Enable it in the tls section with a cert/key, or set enabled to true to use an auto-generated certificate.';
+      note.style.color = 'var(--text-muted)';
+    } else {
+      note.textContent = '';
+    }
+  }
+
+  const qsMode = document.getElementById('qs-mode');
+  qsMode.onchange = () => {
+    S.data.config.mode = qsMode.value;
+    syncConfigToTextarea();
+  };
+  const qsWorkers = document.getElementById('qs-workers');
+  qsWorkers.onchange = () => {
+    S.data.config.workers = qsWorkers.value;
+    syncConfigToTextarea();
+  };
+  const qsCustomDiff = document.getElementById('qs-custom-diff');
+  qsCustomDiff.onchange = () => {
+    S.data.config['custom-diff'] = parseInt(qsCustomDiff.value, 10) || 0;
+    syncConfigToTextarea();
+  };
+  const qsCustomDiffStats = document.getElementById('qs-custom-diff-stats');
+  qsCustomDiffStats.onchange = () => {
+    S.data.config['custom-diff-stats'] = qsCustomDiffStats.checked;
+    syncConfigToTextarea();
+  };
+  const qsHttpRestricted = document.getElementById('qs-http-restricted');
+  qsHttpRestricted.onchange = () => {
+    if (!S.data.config.http) S.data.config.http = {};
+    S.data.config.http.restricted = qsHttpRestricted.checked;
+    syncConfigToTextarea();
+  };
+  const qsAccessPassword = document.getElementById('qs-access-password');
+  qsAccessPassword.onchange = () => {
+    S.data.config['access-password'] = qsAccessPassword.value || null;
+    syncConfigToTextarea();
+  };
+  const qsHttpAccessToken = document.getElementById('qs-http-access-token');
+  qsHttpAccessToken.onchange = () => {
+    if (!S.data.config.http) S.data.config.http = {};
+    S.data.config.http['access-token'] = qsHttpAccessToken.value || null;
+    syncConfigToTextarea();
+  };
+  const qsVerbose = document.getElementById('qs-verbose');
+  qsVerbose.onchange = () => {
+    S.data.config.verbose = qsVerbose.checked;
+    syncConfigToTextarea();
+  };
+
+  function loadConfig() {
+    api('GET', '/1/config').then(d => {
+      S.data.config = d;
+      configEditor.value = JSON.stringify(d, null, 4);
+      syncHighlight();
+      populateQuickSettings(d);
+      configMsg('', '');
+    }).catch(e => {
+      const msg = e.error || e.message || 'Unknown error';
+      configMsg(msg === 'FORBIDDEN' ? 'Access denied. API is in restricted mode or token is missing.' : msg, 'err');
+    });
+  }
+
+  document.getElementById('config-save').onclick = () => {
+    const raw = configEditor.value;
+    let parsed;
+    try {
+      parsed = JSON.parse(raw);
+    } catch (e) {
+      configMsg(`Invalid JSON: ${e.message}`, 'err');
+      return;
+    }
+    configMsg('Saving...', '');
+    api('PUT', '/1/config', parsed).then(() => {
+      configMsg('Config saved and applied', 'ok');
+      S.data.config = parsed;
+      populateQuickSettings(parsed);
+    }).catch(e => {
+      if (e.message !== 'Unauthorized') configMsg(`Save failed: ${e.error || e.message || 'Unknown error'}`, 'err');
+    });
+  };
+
+  document.getElementById('config-reload').onclick = () => {
+    S.data.config = null;
+    loadConfig();
+  };
+
+  document.getElementById('btn-restart').onclick = () => {
+    if (!confirm('This will shut down the proxy process.\nIt will only restart automatically if managed by systemd or a similar supervisor.')) return;
+    api('POST', '/1/shutdown', {}).then(() => {
+      setStatus(false);
+      setTimeout(() => location.reload(), 3000);
+    }).catch(() => {});
+  };
+
+  document.getElementById('btn-logout').onclick = () => {
+    if (!confirm('Clear the stored API token?\nYou will need to re-enter it to access the dashboard.')) return;
+    S.token = '';
+    localStorage.removeItem('api_token');
+    location.reload();
+  };
+
+  function configMsg(text, type) {
+    const el = document.getElementById('config-msg');
+    el.textContent = text;
+    el.className = 'msg' + (type === 'ok' ? ' msg-ok' : type === 'err' ? ' msg-err' : '');
+  }
+
+  // --- Polling ---
+
+  function poll() {
+    clearTimeout(S.poll);
+    const view = S.view;
+    if (view === 'dashboard') {
+      api('GET', '/1/summary').then(d => {
+        S.data.summary = d;
+        renderDashboard(d);
+      }).catch(() => {});
+      S.poll = setTimeout(poll, 2000);
+    } else if (view === 'workers') {
+      api('GET', '/1/workers').then(d => {
+        S.data.workers = d;
+        renderWorkers(d);
+      }).catch(() => {});
+      S.poll = setTimeout(poll, 5000);
+    } else if (view === 'miners') {
+      api('GET', '/1/miners').then(d => {
+        S.data.miners = d;
+        renderMiners(d);
+      }).catch(() => {});
+      S.poll = setTimeout(poll, 5000);
+    }
+  }
+
+  // --- Remote Version ---
+
+  function compareVersions(a, b) {
+    const pa = a.split('.'), pb = b.split('.');
+    for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+      const na = parseInt(pa[i] || '0', 10), nb = parseInt(pb[i] || '0', 10);
+      if (na !== nb) return na > nb ? 1 : -1;
+    }
+    return 0;
+  }
+
+  function checkRemoteVersion() {
+    fetch('https://api.github.com/repos/HashVault/vltrig-proxy/releases/latest')
+      .then(r => r.json())
+      .then(d => {
+        const tag = (d.tag_name || '').replace(/^v/, '');
+        if (!tag) return;
+        document.getElementById('foot-ver-remote').textContent = `v${tag}`;
+        const localEl = document.getElementById('foot-ver-local');
+        const local = (localEl.textContent || '').replace(/^v/, '');
+        if (local === '-') return;
+        const cmp = compareVersions(local, tag);
+        localEl.className = cmp >= 0 ? 'ver-ok' : 'ver-old';
+      }).catch(() => {});
+  }
+
+  // --- TLS banner ---
+
+  function showTlsBanner() {
+    const httpsUrl = 'https://' + location.hostname + ':' + location.port + '/';
+    const banner = document.getElementById('tls-banner');
+    banner.innerHTML =
+      '<button class="dismiss" id="tls-banner-close">x</button>' +
+      '<strong>Insecure connection.</strong> ' +
+      'TLS is enabled on this proxy. Use <a href="' + httpsUrl + '">' + httpsUrl + '</a> instead. ' +
+      'If using a self-signed certificate, the browser will show a security warning - ' +
+      'click <em>Advanced</em> -> <em>Accept the Risk and Continue</em> (Firefox), ' +
+      '<em>Advanced</em> -> <em>Proceed to site</em> (Chrome/Opera/Edge), ' +
+      'or <em>Show Details</em> -> <em>visit this website</em> (Safari).';
+    banner.classList.remove('hidden');
+    document.getElementById('tls-banner-close').onclick = () => banner.classList.add('hidden');
+  }
+
+  // --- Init ---
+
+  checkRemoteVersion();
+  setInterval(checkRemoteVersion, 3600000);
+
+  api('GET', '/1/summary').then(d => {
+    hideAuth();
+    S.data.summary = d;
+    renderDashboard(d);
+    S.poll = setTimeout(poll, 2000);
+    if (location.protocol === 'http:' && d.tls_active) {
+      showTlsBanner();
+    }
+  }).catch(() => {});
+
+})();
+</script>
+</body>
+</html>

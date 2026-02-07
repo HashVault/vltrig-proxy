@@ -234,6 +234,36 @@ else()
 endif()
 
 
+if (WITH_WEB_UI AND WITH_HTTP)
+    find_package(Python3 COMPONENTS Interpreter REQUIRED)
+
+    add_custom_command(
+        OUTPUT ${CMAKE_SOURCE_DIR}/src/webui/webui_html.h
+        COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/scripts/embed_html.py
+                ${CMAKE_SOURCE_DIR}/src/webui/index.html
+                ${CMAKE_SOURCE_DIR}/src/webui/webui_html.h
+        DEPENDS ${CMAKE_SOURCE_DIR}/src/webui/index.html
+                ${CMAKE_SOURCE_DIR}/scripts/embed_html.py
+        COMMENT "Generating embedded Web UI"
+    )
+
+    set(HEADERS_BASE_WEB_UI
+        src/webui/WebUI.h
+        src/webui/webui_html.h
+        )
+
+    set(SOURCES_BASE_WEB_UI
+        src/webui/WebUI.cpp
+        )
+
+    add_definitions(/DXMRIG_FEATURE_WEB_UI)
+else()
+    set(HEADERS_BASE_WEB_UI "")
+    set(SOURCES_BASE_WEB_UI "")
+    remove_definitions(/DXMRIG_FEATURE_WEB_UI)
+endif()
+
+
 if (WITH_ENV_VARS AND CMAKE_CXX_COMPILER_ID MATCHES GNU AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 4.9)
     set(WITH_ENV_VARS OFF)
 endif()

@@ -8,6 +8,7 @@ option(WITH_HTTP            "HTTP protocol support (client/server)" ON)
 option(WITH_HTTP2           "Enable HTTP/2 support for DoH" ON)
 option(WITH_TLS             "Enable OpenSSL support"  ON)
 option(WITH_ENV_VARS        "Enable environment variables support in config file" ON)
+option(WITH_WEB_UI          "Embedded web management UI" ON)
 
 
 include(CheckIncludeFile)
@@ -19,6 +20,7 @@ include(src/base/base.cmake)
 set(HEADERS
     "${HEADERS_BASE}"
     "${HEADERS_BASE_HTTP}"
+    "${HEADERS_BASE_WEB_UI}"
     src/App.h
     src/core/config/Config_platform.h
     src/core/config/Config.h
@@ -74,6 +76,7 @@ set(HEADERS
 set(SOURCES
     "${SOURCES_BASE}"
     "${SOURCES_BASE_HTTP}"
+    "${SOURCES_BASE_WEB_UI}"
     src/App.cpp
     src/core/config/Config.cpp
     src/core/config/ConfigTransform.cpp
