@@ -42,6 +42,7 @@ public:
     ~Httpd() override;
 
     inline bool isBound() const { return m_server != nullptr; }
+    inline bool isTLS() const   { return m_tls; }
 
     bool start();
     void stop();
@@ -56,6 +57,7 @@ private:
     const Base *m_base;
     std::shared_ptr<IHttpListener> m_httpListener;
     TcpServer *m_server     = nullptr;
+    bool m_tls              = false;
     uint16_t m_port         = 0;
 
 #   ifdef XMRIG_FEATURE_TLS

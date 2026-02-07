@@ -212,6 +212,7 @@ void xmrig::Api::exec(IApiRequest &request)
         features.PushBack("cuda", allocator);
 #       endif
         reply.AddMember("features", features, allocator);
+        reply.AddMember("tls_active", m_httpd && m_httpd->isTLS(), allocator);
     }
 
     for (IApiListener *listener : m_listeners) {
