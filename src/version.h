@@ -12,7 +12,7 @@
 #define APP_ID        "vltrig-proxy"
 #define APP_NAME      "vltrig-proxy"
 #define APP_DESC      "vltrig Stratum proxy"
-#define APP_VERSION   "6.24.0.3"
+#define APP_VERSION   "6.24.0.4"
 #define APP_DOMAIN    "hashvault.pro"
 #define APP_SITE      "hashvault.pro"
 #define APP_COPYRIGHT "Copyright (C) 2016-2025 xmrig.com, 2026 hashvault.pro"
