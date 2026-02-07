@@ -25,15 +25,33 @@ A fork of [XMRig Proxy](https://github.com/xmrig/xmrig-proxy) tailored for [Hash
 
 ## Table of Contents
 
+- [What is a Stratum Proxy?](#what-is-a-stratum-proxy)
 - [Download](#download)
 - [Install via APT (Ubuntu/Debian)](#install-via-apt-ubuntudebian)
 - [Install via DNF (Fedora/RHEL)](#install-via-dnf-fedorarhel)
-- [What is a Stratum Proxy?](#what-is-a-stratum-proxy)
 - [Building](#building)
 - [Web UI](#web-ui)
 - [Versioning](#versioning)
 - [Upstream XMRig Proxy](#upstream-xmrig-proxy)
 - [Contributing](#contributing)
+
+---
+
+## What is a Stratum Proxy?
+
+A stratum proxy sits between your miners and the pool, aggregating connections:
+
+```
+[Miner 1] --\
+[Miner 2] ----> [vltrig-proxy] ----> [Pool]
+[Miner N] --/
+```
+
+**Benefits:**
+- Reduces pool-side connections (100,000 miners -> ~400 pool connections)
+- Handles donation traffic efficiently
+- Supports both NiceHash and simple modes
+- Can manage 100K+ miner connections on minimal hardware
 
 ---
 
@@ -126,24 +144,6 @@ To update:
 ```bash
 sudo dnf upgrade vltrig-proxy
 ```
-
----
-
-## What is a Stratum Proxy?
-
-A stratum proxy sits between your miners and the pool, aggregating connections:
-
-```
-[Miner 1] --\
-[Miner 2] ----> [vltrig-proxy] ----> [Pool]
-[Miner N] --/
-```
-
-**Benefits:**
-- Reduces pool-side connections (100,000 miners -> ~400 pool connections)
-- Handles donation traffic efficiently
-- Supports both NiceHash and simple modes
-- Can manage 100K+ miner connections on minimal hardware
 
 ---
 
