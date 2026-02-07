@@ -27,6 +27,8 @@ A fork of [XMRig Proxy](https://github.com/xmrig/xmrig-proxy) tailored for [Hash
 
 - [Download](#download)
 - [What is a Stratum Proxy?](#what-is-a-stratum-proxy)
+- [Install via APT (Ubuntu/Debian)](#install-via-apt-ubuntudebian)
+- [Install via DNF (Fedora/RHEL)](#install-via-dnf-fedorarhel)
 - [Building](#building)
 - [Web UI](#web-ui)
 - [Versioning](#versioning)
@@ -44,6 +46,66 @@ Prebuilt binaries are available on the [**Releases**](https://github.com/HashVau
 | Windows | x64 | MinGW build |
 | macOS | x64 | Intel Macs |
 | macOS | ARM64 | Apple Silicon |
+
+---
+
+## Install via APT (Ubuntu/Debian)
+
+```bash
+# Add the GPG key
+curl -fsSL https://hashvault.github.io/apt/KEY.gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashvault.gpg
+
+# Add the repository
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/hashvault.gpg] https://hashvault.github.io/apt stable main" | sudo tee /etc/apt/sources.list.d/hashvault.list
+
+# Install
+sudo apt update && sudo apt install vltrig-proxy
+```
+
+The binary installs to `/usr/bin/vltrig-proxy` with a default config at `/etc/vltrig-proxy/config.json`.
+
+Start and enable the service:
+
+```bash
+sudo systemctl enable --now vltrig-proxy
+```
+
+To update:
+
+```bash
+sudo apt update && sudo apt upgrade vltrig-proxy
+```
+
+---
+
+## Install via DNF (Fedora/RHEL)
+
+```bash
+# Add the repository
+sudo tee /etc/yum.repos.d/hashvault.repo << 'EOF'
+[hashvault]
+name=HashVault
+baseurl=https://hashvault.github.io/rpm
+gpgcheck=1
+gpgkey=https://hashvault.github.io/rpm/KEY.gpg
+enabled=1
+EOF
+
+# Install
+sudo dnf install vltrig-proxy
+```
+
+Start and enable the service:
+
+```bash
+sudo systemctl enable --now vltrig-proxy
+```
+
+To update:
+
+```bash
+sudo dnf upgrade vltrig-proxy
+```
 
 ---
 
