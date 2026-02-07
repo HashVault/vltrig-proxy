@@ -29,8 +29,13 @@
 
 #ifdef XMRIG_FEATURE_TLS
 #   include "base/net/https/HttpsServer.h"
+#   include "base/net/tls/TlsConfig.h"
 #else
 #   include "base/net/http/HttpServer.h"
+#endif
+
+#ifdef XMRIG_FEATURE_WEB_UI
+#   include "webui/WebUI.h"
 #endif
 
 
@@ -66,11 +71,19 @@ bool xmrig::Httpd::start()
         return true;
     }
 
-    bool tls = false;
+    m_tls = false;
 
 #   ifdef XMRIG_FEATURE_TLS
     m_http = new HttpsServer(m_httpListener);
-    tls = m_http->setTls(m_base->config()->tls());
+    m_tls = m_http->setTls(m_base->config()->tls());
+
+    if (!m_tls && m_base->config()->tls().isEnabled()) {
+        TlsConfig fallback;
+        if (fallback.generate()) {
+            LOG_WARN("TLS certificate failed to load, using auto-generated certificate");
+            m_tls = m_http->setTls(fallback);
+        }
+    }
 #   else
     m_http = new HttpServer(m_httpListener);
 #   endif
@@ -80,7 +93,7 @@ bool xmrig::Httpd::start()
     const int rc = m_server->bind();
     Log::print(GREEN_BOLD(" * ") WHITE_BOLD("%-13s") CSI "1;%dm%s:%d" " " RED_BOLD("%s"),
                "HTTP API",
-               tls ? 32 : 36,
+               m_tls ? 32 : 36,
                config.host().data(),
                rc < 0 ? config.port() : rc,
                rc < 0 ? uv_strerror(rc) : ""
@@ -151,6 +164,12 @@ void xmrig::Httpd::onHttpData(const HttpData &data)
 
         return HttpResponse(data.id(), 404 /* NOT_FOUND */).end();
     }
+
+#   ifdef XMRIG_FEATURE_WEB_UI
+    if (data.method == HTTP_GET && (data.url == "/" || data.url == "/index.html")) {
+        return WebUI::serve(data);
+    }
+#   endif
 
     if (data.method > 4) {
         return HttpApiResponse(data.id(), 405 /* METHOD_NOT_ALLOWED */).end();

@@ -57,6 +57,7 @@
 
 
 #ifdef XMRIG_FEATURE_TLS
+#   include "base/net/tls/TlsConfig.h"
 #   include "base/net/tls/TlsContext.h"
 #endif
 
@@ -170,6 +171,14 @@ void xmrig::Proxy::connect()
 {
 #   ifdef XMRIG_FEATURE_TLS
     m_tls = TlsContext::create(m_controller->config()->tls());
+
+    if (!m_tls && m_controller->config()->tls().isEnabled()) {
+        TlsConfig fallback;
+        if (fallback.generate()) {
+            LOG_WARN("TLS certificate failed to load, using auto-generated certificate");
+            m_tls = TlsContext::create(fallback);
+        }
+    }
 #   endif
 
     m_splitter->connect();
