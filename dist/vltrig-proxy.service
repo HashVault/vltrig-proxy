@@ -11,6 +11,8 @@ RestartSec=1
 User=vltrig-proxy
 Group=vltrig-proxy
 
+LimitNOFILE=1048576
+
 NoNewPrivileges=true
 ProtectSystem=strict
 ReadWritePaths=/etc/vltrig-proxy
