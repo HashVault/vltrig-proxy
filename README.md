@@ -203,8 +203,8 @@ The Web UI requires the HTTP API to be enabled in your config:
 {
     "http": {
         "enabled": true,
-        "host": "127.0.0.1",
-        "port": 4048,
+        "host": "0.0.0.0",
+        "port": 4040,
         "access-token": "your-secret-token",
         "restricted": false
     }
@@ -215,7 +215,7 @@ Set `restricted` to `false` to allow config changes and restart from the UI. Whe
 
 ### Accessing
 
-Open `http://127.0.0.1:4048` in a browser. If an `access-token` is set, the UI will prompt for it on first visit and store it locally.
+Open `http://127.0.0.1:4040` in a browser. If an `access-token` is set, the UI will prompt for it on first visit and store it locally.
 
 If TLS is enabled, use `https://` instead. The proxy auto-generates a self-signed certificate if configured cert files are missing.
 
