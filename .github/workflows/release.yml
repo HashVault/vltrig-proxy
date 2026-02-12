@@ -38,6 +38,7 @@ jobs:
         run: |
           mkdir -p staging
           cp build/vltrig-proxy scripts/vltrig-proxy/run.sh src/config.json staging/
+          chmod +x staging/vltrig-proxy staging/run.sh
           cd staging && sha256sum * > SHA256SUMS
 
       - name: Upload artifact
@@ -117,6 +118,7 @@ jobs:
         run: |
           mkdir -p staging
           cp build/vltrig-proxy scripts/vltrig-proxy/run.sh src/config.json staging/
+          chmod +x staging/vltrig-proxy staging/run.sh
           cd staging && shasum -a 256 * > SHA256SUMS
 
       - name: Upload artifact
@@ -146,6 +148,7 @@ jobs:
         run: |
           mkdir -p staging
           cp build/vltrig-proxy scripts/vltrig-proxy/run.sh src/config.json staging/
+          chmod +x staging/vltrig-proxy staging/run.sh
           cd staging && shasum -a 256 * > SHA256SUMS
 
       - name: Upload artifact
@@ -194,6 +197,15 @@ jobs:
           mv vltrig-proxy-*.rpm artifacts/
         env:
           VERSION: ${{ env.VERSION }}
+
+      - name: Fix permissions
+        run: |
+          chmod +x artifacts/vltrig-proxy-${{ env.VERSION }}-linux-x64/vltrig-proxy
+          chmod +x artifacts/vltrig-proxy-${{ env.VERSION }}-linux-x64/run.sh
+          chmod +x artifacts/vltrig-proxy-${{ env.VERSION }}-macos-x64/vltrig-proxy
+          chmod +x artifacts/vltrig-proxy-${{ env.VERSION }}-macos-x64/run.sh
+          chmod +x artifacts/vltrig-proxy-${{ env.VERSION }}-macos-arm64/vltrig-proxy
+          chmod +x artifacts/vltrig-proxy-${{ env.VERSION }}-macos-arm64/run.sh
 
       - name: Package artifacts
         run: |
