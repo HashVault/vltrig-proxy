@@ -25,7 +25,7 @@ jobs:
                              nghttp2-dev nghttp2-static
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Build
         run: |
@@ -42,7 +42,7 @@ jobs:
           cd staging && sha256sum * > SHA256SUMS
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vltrig-proxy-${{ env.VERSION }}-linux-x64
           path: staging/*
@@ -68,7 +68,7 @@ jobs:
             make git
 
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Build
         run: |
@@ -84,7 +84,7 @@ jobs:
           cd staging && sha256sum * > SHA256SUMS
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vltrig-proxy-${{ env.VERSION }}-windows-gcc-x64
           path: staging/*
@@ -93,7 +93,7 @@ jobs:
     runs-on: macos-15
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install x86_64 Homebrew and dependencies
         run: |
@@ -122,7 +122,7 @@ jobs:
           cd staging && shasum -a 256 * > SHA256SUMS
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vltrig-proxy-${{ env.VERSION }}-macos-x64
           path: staging/*
@@ -131,7 +131,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install dependencies
         run: |
@@ -152,7 +152,7 @@ jobs:
           cd staging && shasum -a 256 * > SHA256SUMS
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vltrig-proxy-${{ env.VERSION }}-macos-arm64
           path: staging/*
@@ -162,10 +162,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Download all artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           path: artifacts
 
@@ -253,19 +253,19 @@ jobs:
           rpmsign --addsign artifacts/vltrig-proxy-*.x86_64.rpm
 
       - name: Upload .deb artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vltrig-proxy-deb
           path: artifacts/vltrig-proxy_*_amd64.deb
 
       - name: Upload .rpm artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: vltrig-proxy-rpm
           path: artifacts/vltrig-proxy-*.x86_64.rpm
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           draft: true
           files: artifacts/*
@@ -280,19 +280,19 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install tools
         run: sudo apt-get update && sudo apt-get install -y apt-utils createrepo-c rpm
 
       - name: Download .deb artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: vltrig-proxy-deb
           path: .
 
       - name: Download .rpm artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: vltrig-proxy-rpm
           path: .
