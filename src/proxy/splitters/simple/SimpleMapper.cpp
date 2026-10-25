@@ -7,6 +7,7 @@
  * Copyright 2017-2018 XMR-Stak    <https://github.com/fireice-uk>, <https://github.com/psychocrypt>
  * Copyright 2018-2025 SChernykh   <https://github.com/SChernykh>
  * Copyright 2016-2025 XMRig       <https://github.com/xmrig>, <support@xmrig.com>
+ * Copyright 2026      HashVault   <https://github.com/HashVault>, <root@hashvault.pro>
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -178,8 +179,11 @@ void xmrig::SimpleMapper::onActive(IStrategy *strategy, IClient *client)
 void xmrig::SimpleMapper::onJob(IStrategy *, IClient *client, const Job &job, const rapidjson::Value &)
 {
     if (m_controller->config()->isVerbose()) {
-        LOG_INFO("%s " CYAN("%04u ") MAGENTA_BOLD("new job") " from " WHITE_BOLD("%s:%d") " diff " WHITE_BOLD("%" PRIu64) " algo " WHITE_BOLD("%s") " height " WHITE_BOLD("%" PRIu64),
-                 Tags::network(), m_id, client->pool().host().data(), client->pool().port(), job.diff(), job.algorithm().name(), job.height());
+        char aux_buf[256];
+        job.formatAux(aux_buf, sizeof(aux_buf));
+
+        LOG_INFO("%s " CYAN("%04u ") MAGENTA_BOLD("new job") " from " WHITE_BOLD("%s:%d") " diff " WHITE_BOLD("%" PRIu64) " algo " WHITE_BOLD("%s") " height " WHITE_BOLD("%" PRIu64) "%s",
+                 Tags::network(), m_id, client->pool().host().data(), client->pool().port(), job.diff(), job.algorithm().name(), job.height(), aux_buf);
     }
 
     if (m_donate && m_donate->isActive() && client->id() != -1 && !m_donate->reschedule()) {

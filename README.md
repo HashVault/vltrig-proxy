@@ -31,6 +31,7 @@ A fork of [XMRig Proxy](https://github.com/xmrig/xmrig-proxy) tailored for [Hash
 - [Install via DNF (Fedora/RHEL)](#install-via-dnf-fedorarhel)
 - [Building](#building)
 - [Web UI](#web-ui)
+- [Merge Mining Job Info](#merge-mining-job-info)
 - [Versioning](#versioning)
 - [Upstream XMRig Proxy](#upstream-xmrig-proxy)
 - [Contributing](#contributing)
@@ -236,6 +237,60 @@ cmake .. -DWITH_WEB_UI=OFF
 ```
 
 The Web UI requires Python 3 at build time to compress and embed the HTML into the binary.
+
+---
+
+## Merge Mining Job Info
+
+When a pool merge mines an auxiliary chain (such as Tari), the aux block info lives inside the miner transaction, which the proxy never sees. vltrig-proxy supports an optional stratum extension that lets the pool send this info with each job. With `--verbose`, it is shown in the job log line:
+
+```
+0000 new job from pool.hashvault.pro:443 diff 120K algo rx/0 height 3500000 aux tari 372635 a1b2c3d4
+```
+
+This makes it easy to tell aux chain updates apart from Monero mempool updates. Note that the aux hash can change on every job even at the same aux height, since a fresh aux block is built for each template. A change in aux height is the reliable signal. The aux info is only logged by the proxy. It is not forwarded to connected miners.
+
+<details>
+<summary><strong>Protocol extension</strong></summary>
+
+An optional `aux` list in job params, with one entry per merge mined chain, both in the login result's `job` and in `method: "job"` notifications:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "job",
+  "params": {
+    "blob": "...",
+    "job_id": "...",
+    "target": "...",
+    "height": 3500000,
+    "algo": "rx/0",
+    "seed_hash": "...",
+    "aux": [
+      {
+        "chain": "tari",
+        "height": 372635,
+        "hash": "a1b2c3d4..."
+      }
+    ]
+  }
+}
+```
+
+Each entry:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `chain` | string | Aux chain name, optional (printed up to 16 characters) |
+| `height` | integer | Aux chain block height (entries without a positive height are skipped) |
+| `hash` | string | Aux block hash in hex, e.g. Tari mining hash (first 8 characters are printed) |
+
+- Entries are printed in order as `aux <chain> <height> <hash>` groups, up to 4 entries.
+- Omit the field when the job has no merge mining.
+- The field is for display only. It does not affect mining or job deduplication.
+- A missing or malformed `aux` is silently ignored. Miners and proxies based on upstream XMRig ignore unknown job fields, but pools may still choose to send it only to agents starting with `vltrig-proxy/`.
+
+The same extension is supported by [vltrig](https://github.com/HashVault/vltrig).
 
 ---
 
