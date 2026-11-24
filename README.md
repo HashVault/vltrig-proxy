@@ -303,9 +303,12 @@ Version format: **`X.Y.Z.P`**
 | `X.Y.Z` | Upstream XMRig Proxy version |
 | `.P` | vltrig-proxy patch number (continuous) |
 
+An upstream merge updates `X.Y.Z` and keeps `.P`. Each vltrig-proxy change increments `.P`.
+
 ```
-XMRig Proxy 6.24.0 -> vltrig-proxy 6.24.0.1 -> 6.24.0.2 -> 6.24.0.3
-XMRig Proxy 6.25.0 -> vltrig-proxy 6.25.0.4 -> 6.25.0.5
+XMRig Proxy 6.24.0 -> vltrig-proxy 6.24.0.1 -> 6.24.0.2 -> 6.24.0.3 -> 6.24.0.4
+XMRig Proxy 6.26.0 -> vltrig-proxy 6.26.0.4 -> 6.26.0.5 -> 6.26.0.6
+XMRig Proxy 6.27.0 -> vltrig-proxy 6.27.0.6
 ```
 
 ---
